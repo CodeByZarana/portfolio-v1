@@ -22,10 +22,10 @@ const Experience = () => {
             </div>
           </div>
           <p className="text-gray-700 dark:text-gray-300">
-            During my internship at Awakeen Studio Pvt. Ltd., I worked on a project titled "AR in Education," where I designed and developed various components using C#, Unity, and Vuforia. The project involved implementing augmented reality, creating 3D models, and designing user-friendly interfaces.
+            During my internship at Awakeen Studio Pvt. Ltd., I worked on a project titled &quot;AR in Education,&quot; where I designed and developed various components using C#, Unity, and Vuforia. The project involved implementing augmented reality, creating 3D models, and designing user-friendly interfaces.
           </p>
           <ul className="list-disc pl-5 space-y-2 mt-4 text-gray-700 dark:text-gray-300">
-            <li>Full-Stack Development: Developed and integrated both frontend and backend components using C# and Unity’s .NET-based framework.</li>
+            <li>Full-Stack Development: Developed and integrated both frontend and backend components using C# and Unity&apos;s .NET-based framework.</li>
             <li>Backend Development: Managed core application logic and server-side functionality, ensuring robust performance.</li>
             <li>Frontend Development: Created responsive user interfaces, similar to frontend development using React.</li>
             <li>Collaborative Development: Worked in an Agile environment, utilizing Git for version control and continuous integration.</li>
@@ -43,7 +43,7 @@ const Experience = () => {
                 <li>System Architecture: Designed and implemented system architecture, including backend services and frontend UI.</li>
                 <li>Programming and Debugging: Wrote clean, efficient code in C#, which translates well to Java or .NET development.</li>
                 <li>Version Control: Managed code using Git, similar to best practices in software development.</li>
-                <li>Performance Optimization: Optimized the application’s performance for Android devices.</li>
+                <li>Performance Optimization: Optimized the application&apos;s performance for Android devices.</li>
               </ul>
               
             </div>

@@ -3,9 +3,7 @@ import { AiFillLinkedin, AiFillGithub, AiOutlineMail } from "react-icons/ai";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { useState } from "react";
 import deved from "../public/dev-ed-wave.png";
-
 import Image from "next/image";
-
 import { Typewriter } from 'react-simple-typewriter';
 import Navbar from "./navbar";
 import AboutMe from "./aboutme";
@@ -31,7 +29,6 @@ export default function Home() {
           {/* Navbar Component */}
           <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-          {/**this is not wrapped in any component. stays as it is */}
           <section className="min-h-screen">
           <div className="text-center p-10 py-10">
             <h2 className="text-5xl py-2 text-teal-600 font-medium dark:text-teal-400 md:text-6xl">
@@ -49,8 +46,8 @@ export default function Home() {
             />
             </h3>
             <p className="text-md py-5 leading-8 text-gray-800 dark:text-gray-200 max-w-xl mx-auto md:text-xl">
-              Hi, I'm Zarana! As a recent graduate with a passion for software development and design, I'm eager to start my career and make a real impact. 
-              Whether you're looking for innovative programming solutions or creative design content, I'm excited to collaborate and bring fresh ideas to the table. Join me below, and let's begin our journey 
+              Hi, I&apos;m Zarana! As a recent graduate with a passion for software development and design, I&apos;m eager to start my career and make a real impact. 
+              Whether you&apos;re looking for innovative programming solutions or creative design content, I&apos;m excited to collaborate and bring fresh ideas to the table. Join me below, and let&apos;s begin our journey 
               in creating something extraordinary together!
             </p>
             <div className="text-5xl flex justify-center gap-16 py-3 text-gray-600 dark:text-gray-400">
@@ -71,39 +68,33 @@ export default function Home() {
             </div>
           </div>
         </section>
-        {/**The sections starts form here! */}
+        
         <section className="min-h-screen" id="about">
           <AboutMe />
         </section>
         
-        <section id="experience" >
-          {/* Experience content goes here */}
-          <Experience/>
+        <section id="experience">
+          <Experience />
         </section>
 
         <section id="projects">
-          {/* Projects content goes here */}
-          <Projects/>
+          <Projects />
         </section>
 
         <section id="skills">
-          {/* Skills content goes here */}
-          <Skills/>
+          <Skills />
         </section>
 
         <section id="education">
-          {/* Education content goes here */}
-          <Education/>
+          <Education />
         </section>
 
         <section id="certificates">
-          {/* Certificates content goes here */}
-          <Certificates/>
+          <Certificates />
         </section>
 
         <section id="contact">
-          {/* Contact content goes here */}
-          <Contact/>
+          <Contact />
         </section>
       </main>
     </div>

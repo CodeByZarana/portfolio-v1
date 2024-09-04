@@ -39,13 +39,13 @@ export default function AboutMe() {
           >
             <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">Who I Am</h3>
             <p className="text-gray-700 dark:text-gray-300 flex-grow text-justify">
-              I'm Zarana Solanki, and my journey into software development wasn’t a straight path. It started with a lot of struggle—subjects that didn’t click right away and results that fell short of my expectations. But instead of giving up, I dug in deeper, spending countless hours studying and pushing through the frustration of bugs I couldn’t solve. Over time, those challenges turned into small victories, and I found myself genuinely enjoying the process of problem-solving.
+              I&apos;m Zarana Solanki, and my journey into software development wasn&apos;t a straight path. It started with a lot of struggle—subjects that didn&apos;t click right away and results that fell short of my expectations. But instead of giving up, I dug in deeper, spending countless hours studying and pushing through the frustration of bugs I couldn&apos;t solve. Over time, those challenges turned into small victories, and I found myself genuinely enjoying the process of problem-solving.
             </p>
             <p className="text-gray-700 dark:text-gray-300 flex-grow text-justify">
-              What I love most about technology is that it’s always evolving, and that constant change keeps me on my toes. I’ve learned to embrace the unknown, whether it’s diving into a new programming language or adjusting to different project requirements. I might not have all the answers right away, but I’m not afraid to learn as I go, and that adaptability has become one of my biggest strengths.
+              What I love most about technology is that it&apos;s always evolving, and that constant change keeps me on my toes. I&apos;ve learned to embrace the unknown, whether it&apos;s diving into a new programming language or adjusting to different project requirements. I might not have all the answers right away, but I&apos;m not afraid to learn as I go, and that adaptability has become one of my biggest strengths.
             </p>
             <p className="text-gray-700 dark:text-gray-300 text-justify">
-              At the heart of it all, I’m driven by a desire to create and contribute. I’ve come to appreciate the value of persistence, the importance of teamwork, and the thrill of seeing a project come to life. While I’m still growing and learning every day, I’m excited about where this journey is taking me and the impact I can make through my work in technology.
+              At the heart of it all, I&apos;m driven by a desire to create and contribute. I&apos;ve come to appreciate the value of persistence, the importance of teamwork, and the thrill of seeing a project come to life. While I&apos;m still growing and learning every day, I&apos;m excited about where this journey is taking me and the impact I can make through my work in technology.
             </p>
           </motion.div>
         </div>

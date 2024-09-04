@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 const projects = {
   "Web Development": [
@@ -113,7 +114,7 @@ const Projects = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects[activeTab].map((project, index) => (
             <div key={index} className="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-              <img src={project.imageUrl} alt={project.title} className="w-full h-48 object-cover" />
+              <Image src={project.imageUrl} alt={project.title} className="w-full h-48 object-cover" width={500} height={300} />
               <div className="p-6">
                 <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-white">{project.title}</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">{project.description}</p>
