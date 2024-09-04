@@ -61,15 +61,18 @@ export default function Home() {
                 <AiFillGithub className="hover:text-gray-900 dark:hover:text-gray-200 transition duration-300"/>
               </a>
             </div>
-            <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full w-80 h-80 relative overflow-hidden md:h-96 md:w-96 flex items-center justify-center">
-            <Image
-            src={deved}
-            layout="intrinsic"
-            objectFit="cover"
-            alt="Developer waving"
-            className="object-center"
-            />
-            </div>
+            <section className="min-h-screen flex flex-col items-center justify-center">
+  <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full w-80 h-80 relative overflow-hidden md:h-96 md:w-96 flex items-center justify-center">
+    <Image
+      src={deved}
+      layout="intrinsic"
+      objectFit="cover"
+      alt="Developer waving"
+      className="object-center"
+    />
+  </div>
+</section>
+
           </div>
         </section>
         
