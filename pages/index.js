@@ -29,53 +29,55 @@ export default function Home() {
           {/* Navbar Component */}
           <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
 
-          <section className="min-h-screen">
-          <div className="text-center p-10 py-10">
-            <h2 className="text-5xl py-2 text-teal-600 font-medium dark:text-teal-400 md:text-6xl">
-              Zarana Solanki
-            </h2>
-            <h3 className="text-2xl py-2 dark:text-white md:text-3xl">
-            <Typewriter
-              words={['Full Stack Software Developer']}
-              loop={1}
-              cursor
-              cursorStyle="_"
-              typeSpeed={70}
-              deleteSpeed={50}
-              delaySpeed={1000}
-            />
-            </h3>
-            <p className="text-md py-5 leading-8 text-gray-800 dark:text-gray-200 max-w-xl mx-auto md:text-xl">
-              Hi, I&apos;m Zarana! As a recent graduate with a passion for software development and design, I&apos;m eager to start my career and make a real impact. 
-              Whether you&apos;re looking for innovative programming solutions or creative design content, I&apos;m excited to collaborate and bring fresh ideas to the table. Join me below, and let&apos;s begin our journey 
-              in creating something extraordinary together!
-            </p>
-            <div className="text-5xl flex justify-center gap-16 py-3 text-gray-600 dark:text-gray-400">
-              <a href="mailto:zaranasolanki41014@gmail.com" target="_blank" rel="noopener noreferrer">
-                <AiOutlineMail className="hover:text-red-600 transition duration-300"/>
-              </a>
-              <a href="https://www.linkedin.com/in/zarana-solanki" target="_blank" rel="noopener noreferrer">
-                <AiFillLinkedin className="hover:text-blue-600"/>
-              </a>
-              <a href="https://github.com/CodeByZarana" target="_blank" rel="noopener noreferrer">
-                <AiFillGithub className="hover:text-gray-900 dark:hover:text-gray-200 transition duration-300"/>
-              </a>
-            </div>
-            <section className="min-h-screen flex flex-col items-center justify-center">
-  <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full w-80 h-80 relative overflow-hidden md:h-96 md:w-96 flex items-center justify-center">
-    <Image
-      src={deved}
-      layout="intrinsic"
-      objectFit="cover"
-      alt="Developer waving"
-      className="object-center"
-    />
-  </div>
-</section>
+          <section className="min-h-screen flex flex-col items-center justify-center text-center">
+            <div className="p-10 py-10">
+              <h2 className="text-5xl py-2 text-teal-600 font-medium dark:text-teal-400 md:text-6xl">
+                Zarana Solanki
+              </h2>
+              <h3 className="text-2xl py-2 dark:text-white md:text-3xl">
+              <Typewriter
+                words={['Full Stack Software Developer']}
+                loop={1}
+                cursor
+                cursorStyle="_"
+                typeSpeed={70}
+                deleteSpeed={50}
+                delaySpeed={1000}
+              />
+              </h3>
+              <p className="text-md py-5 leading-8 text-gray-800 dark:text-gray-200 max-w-xl mx-auto md:text-xl">
+                Hi, I&apos;m Zarana! As a recent graduate with a passion for software development and design, I&apos;m eager to start my career and make a real impact. 
+                Whether you&apos;re looking for innovative programming solutions or creative design content, I&apos;m excited to collaborate and bring fresh ideas to the table. Join me below, and let&apos;s begin our journey 
+                in creating something extraordinary together!
+              </p>
+              <div className="text-5xl flex justify-center gap-16 py-3 text-gray-600 dark:text-gray-400">
+                <a href="mailto:zaranasolanki41014@gmail.com" target="_blank" rel="noopener noreferrer">
+                  <AiOutlineMail className="hover:text-red-600 transition duration-300"/>
+                </a>
+                <a href="https://www.linkedin.com/in/zarana-solanki" target="_blank" rel="noopener noreferrer">
+                  <AiFillLinkedin className="hover:text-blue-600"/>
+                </a>
+                <a href="https://github.com/CodeByZarana" target="_blank" rel="noopener noreferrer">
+                  <AiFillGithub className="hover:text-gray-900 dark:hover:text-gray-200 transition duration-300"/>
+                </a>
+              </div>
 
-          </div>
-        </section>
+              {/* Image Section */}
+              <div className="relative bg-gradient-to-b from-teal-500 rounded-full w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 flex items-center justify-center mx-auto">
+                <Image
+                  src={deved}
+                  layout="intrinsic"
+                  width={320}
+                  height={320}
+                  objectFit="cover"
+                  alt="Developer waving"
+                  className="rounded-full"
+                />
+              </div>
+            </div>
+          </section>
         
+        {/* Other sections */}
         <section className="min-h-screen" id="about">
           <AboutMe />
         </section>
