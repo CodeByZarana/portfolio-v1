@@ -25,6 +25,13 @@ const projects = {
       technologies: "Java, Android SDK, OCR, Machine Learning",
       imageUrl: "/diabetes.png", // replace with your actual image path
       link: "https://github.com/CodeByZarana/Diabetes-Detector"
+    },
+    {
+      title: "Job Matching Agent",
+      description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning techniques to calculate skills compatibility, category matching, and experience alignment.",
+      technologies: "Python, scikit-learn, NLTK, PyPDF2, TF-IDF Vectorization",
+      imageUrl: "/job-agent.png", // create an image for this project
+      link: "https://github.com/CodeByZarana/Job-Matching-Agent"
     }
   ],
   "Mobile Development": [
