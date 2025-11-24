@@ -1,46 +1,28 @@
-/** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
-      colors: {
-        'custom-cyan': '#2D9CDB',
-      },
       fontFamily: {
         burtons: "burtons",
-        poppins: ["Poppins", "sans-serif"],
+        poppins: ['Poppins', 'sans-serif'],
       },
-      // Add custom utilities for the flip effect
-      perspective: {
-        '1000': '1000px',
+      colors: {
+        // Nature Tech Color Scheme (used sparingly in minimal design)
+        'mocha': '#A47864',
+        'forest': '#2F855A',
+        'burnt-orange': '#ED8936',
       },
-      transform: {
-        'style-preserve-3d': 'preserve-3d',
+      animation: {
+        'bounce': 'bounce 2s infinite',
       },
-      backfaceVisibility: {
-        'hidden': 'hidden',
-      },
+      letterSpacing: {
+        tightest: '-.075em',
+      }
     },
   },
-  plugins: [
-    // Custom plugin to add the required utilities
-    function ({ addUtilities }) {
-      const newUtilities = {
-        '.perspective': {
-          perspective: '1000px',
-        },
-        '.transform-style-preserve-3d': {
-          'transform-style': 'preserve-3d',
-        },
-        '.backface-hidden': {
-          'backface-visibility': 'hidden',
-        },
-      }
-      addUtilities(newUtilities)
-    },
-  ],
-};
+  plugins: [],
+}

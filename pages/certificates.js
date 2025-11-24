@@ -54,25 +54,25 @@ const certificates = [
 
 const Certificates = () => {
   return (
-    <section id="certificates" className="py-10 bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800 dark:text-white">Certificates</h2>
+    <section id="certificates" className="section-padding bg-minimal">
+      <div className="container-minimal max-w-6xl">
+        <h2 className="section-heading text-center mb-16">Certificates</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {certificates.map((certificate, index) => (
             <div key={index} className="flip-card">
               <div className="flip-card-inner">
-                <div className="flip-card-front p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800">
-                  <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">{certificate.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400">{certificate.organization}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{certificate.date}</p>
+                <div className="flip-card-front p-6 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{certificate.title}</h3>
+                  <p className="text-minimal-dark">{certificate.organization}</p>
+                  <p className="text-sm text-minimal-dark">{certificate.date}</p>
                 </div>
-                <div className="flip-card-back p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800">
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">{certificate.details}</p>
+                <div className="flip-card-back p-6 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <p className="text-minimal-dark mb-4">{certificate.details}</p>
                   <a
                     href={certificate.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-teal-500 text-white px-4 py-2 rounded-full shadow hover:bg-teal-600 transition-colors duration-300"
+                    className="btn-minimal btn-primary-minimal inline-block"
                   >
                     View Certificate
                   </a>

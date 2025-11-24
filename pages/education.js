@@ -16,37 +16,33 @@ const education = [
 ];
 
 const Education = () => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
-
   return (
-    <section id="education" className="py-10 bg-white dark:bg-gray-900">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-gray-800 dark:text-white">Education</h2>
-        <div className="flex flex-col md:flex-row justify-center">
-          <div className="flex flex-col md:w-1/3 space-y-4">
-            {education.map((item, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`text-left px-6 py-4 rounded-lg font-semibold ${
-                  activeIndex === index
-                    ? "bg-teal-500 text-white"
-                    : "bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
-                } transition-colors duration-300`}
-              >
-                {item.degree}
-                <br />
-                <span className="text-sm">{item.duration}</span>
-              </button>
-            ))}
-          </div>
-          <div className="md:w-2/3 mt-8 md:mt-0 md:ml-8">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-2">{education[activeIndex].degree}</h3>
-              <p className="text-gray-700 dark:text-gray-300 mb-4">{education[activeIndex].institution}</p>
-              <p className="text-gray-600 dark:text-gray-400">{education[activeIndex].details}</p>
+    <section id="education" className="section-padding bg-minimal">
+      <div className="container-minimal max-w-4xl">
+        <h2 className="section-heading text-center mb-16">Education</h2>
+        
+        <div className="space-y-12">
+          {education.map((item, index) => (
+            <div key={index} className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-8 md:p-12">
+              <div className="mb-6">
+                <p className="text-sm uppercase tracking-wider text-minimal-dark mb-2">
+                  {item.duration}
+                </p>
+                <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                  {item.degree}
+                </h3>
+                <p className="text-lg text-minimal-dark">
+                  {item.institution}
+                </p>
+              </div>
+              
+              <div className="pt-6 border-t border-gray-200 dark:border-gray-800">
+                <p className="text-minimal-dark leading-relaxed">
+                  {item.details}
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

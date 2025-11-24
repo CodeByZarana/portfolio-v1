@@ -8,6 +8,14 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  scroll-behavior: smooth;
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+html.dark,
+html.dark body {
+  background-color: #111827;
 }
 
 a {
@@ -18,19 +26,390 @@ a {
 * {
   box-sizing: border-box;
 }
+
 @font-face {
   font-family: "burtons";
   src: url("../public/Burtons.otf");
 }
+
+/* ============================================
+   AMAN KUMAR STYLE - MINIMAL & CLEAN
+   ============================================ */
+
+/* Pure white background (not warm cream) */
+.bg-minimal {
+  background-color: #FFFFFF;
+}
+
+.dark .bg-minimal {
+  background-color: #111827;
+}
+
+.bg-minimal-dark {
+  background-color: #111827;
+}
+
+/* Huge typography for impact */
+.hero-name {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #000000;
+}
+
+.dark .hero-name {
+  color: #ffffff;
+}
+
+.hero-tagline {
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.section-heading {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 4rem;
+  color: #000000;
+}
+
+.dark .section-heading {
+  color: #ffffff;
+}
+
+/* Generous spacing - Aman style */
+.section-padding {
+  padding: 8rem 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 4rem 0;
+  }
+}
+
+/* Minimal shadows - very subtle */
+.shadow-minimal {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-minimal-hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Clean borders */
+.border-minimal {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.dark .border-minimal {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Nature Tech colors - used sparingly */
+:root {
+  --mocha: #A47864;
+  --forest: #2F855A;
+  --burnt-orange: #ED8936;
+}
+
+/* Minimal button styles */
+.btn-minimal {
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.btn-primary-minimal {
+  background: var(--mocha);
+  color: white;
+  border-color: var(--mocha);
+}
+
+.btn-primary-minimal:hover {
+  background: transparent;
+  color: var(--mocha);
+  border-color: var(--mocha);
+}
+
+.btn-secondary-minimal {
+  background: transparent;
+  color: #000000;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary-minimal:hover {
+  background: #000000;
+  color: white;
+  border-color: #000000;
+}
+
+.dark .btn-secondary-minimal {
+  color: white;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dark .btn-secondary-minimal:hover {
+  background: white;
+  color: black;
+  border-color: white;
+}
+
+/* Project cards - minimal style */
+.project-card-minimal {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: white;
+}
+
+.project-card-minimal:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.dark .project-card-minimal {
+  background: #111111;
+}
+
+/* Tech badges - minimal */
+.tech-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0.25rem;
+  color: #666;
+}
+
+.dark .tech-badge {
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+/* Container - centered with max width */
+.container-minimal {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .container-minimal {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Link styles - minimal */
+.link-minimal {
+  position: relative;
+  color: var(--mocha);
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.link-minimal::after {
+  content: '→';
+  margin-left: 0.5rem;
+  transition: margin-left 0.3s ease;
+}
+
+.link-minimal:hover::after {
+  margin-left: 1rem;
+}
+
+/* Social icons - simple */
+.social-icon {
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background: var(--mocha);
+  color: white;
+  transform: translateY(-4px);
+}
+
+.dark .social-icon {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark .social-icon:hover {
+  background: var(--mocha);
+}
+
+/* Minimal scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Text selection */
+::selection {
+  background: var(--mocha);
+  color: white;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Remove transition from transform and opacity for performance */
+*:not(.project-card-minimal):not(.social-icon):not(.btn-minimal) {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Focus states for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--mocha);
+  outline-offset: 4px;
+}
+
+/* Loading animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Stagger animation for multiple elements */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(135deg, var(--mocha) 0%, var(--forest) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Image overlay on hover */
+.image-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s ease;
+}
+
+.image-overlay:hover::after {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Status badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(47, 133, 90, 0.1);
+  color: var(--forest);
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-badge::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--forest);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Dark mode text colors */
+.dark {
+  color: #ffffff;
+}
+
+.text-minimal-dark {
+  color: #666666;
+}
+
+.dark .text-minimal-dark {
+  color: #e5e5e5;
+}
+
+/* Flip card for certificates */
 .flip-card {
   perspective: 1000px;
+  height: 250px;
 }
 
 .flip-card-inner {
   position: relative;
   width: 100%;
-  height: 200px; /* Adjust height as needed */
-  text-align: center;
+  height: 100%;
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
@@ -45,20 +424,11 @@ a {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.flip-card-front {
-  z-index: 2;
-  transform: rotateY(0deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .flip-card-back {
   transform: rotateY(180deg);
 }
-html, body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
