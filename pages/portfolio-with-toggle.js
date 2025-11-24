@@ -6,12 +6,11 @@ import HeroMinimal from './hero';
 import FeaturedProjects from './projects';
 import AboutMinimal from './aboutme';
 import ContactMinimal from './contact';
-import Experience from './experience';
 import Education from './education';
 import Certificates from './certificates';
 import { BsFillSunFill, BsFillMoonStarsFill, BsList, BsX } from 'react-icons/bs';
 import { AiOutlineHome, AiOutlineFolderOpen, AiOutlineUser, AiOutlineMail } from 'react-icons/ai';
-import { HiOutlineBriefcase, HiOutlineAcademicCap } from 'react-icons/hi';
+import { HiOutlineAcademicCap } from 'react-icons/hi';
 import { FaAward } from 'react-icons/fa';
 
 // Typing Animation Component with Framer Motion
@@ -93,9 +92,8 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
 
   const navItems = [
     { id: 'home', label: 'Home', icon: AiOutlineHome },
-    { id: 'work', label: 'Projects', icon: AiOutlineFolderOpen },
     { id: 'about', label: 'About', icon: AiOutlineUser },
-    { id: 'experience', label: 'Experience', icon: HiOutlineBriefcase },
+    { id: 'work', label: 'Projects', icon: AiOutlineFolderOpen },
     { id: 'education', label: 'Education', icon: HiOutlineAcademicCap },
     { id: 'certificates', label: 'Certificates', icon: FaAward },
     { id: 'contact', label: 'Contact', icon: AiOutlineMail },
@@ -104,13 +102,11 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
   const renderSection = () => {
     switch (activeSection) {
       case 'home':
-        return <HeroMinimal />;
+        return <HeroMinimal onNavigate={setActiveSection} />;
       case 'work':
         return <FeaturedProjects />;
       case 'about':
         return <AboutMinimal />;
-      case 'experience':
-        return <Experience />;
       case 'education':
         return <Education />;
       case 'certificates':
@@ -128,7 +124,7 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
       <aside className={`
         fixed md:static
         top-0 left-0 h-full
-        w-64 bg-white dark:bg-gray-900
+        w-52 bg-white dark:bg-gray-900
         border-r border-gray-200 dark:border-gray-800
         z-50
         transform transition-transform duration-300 ease-in-out
@@ -136,19 +132,19 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
       `}>
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-800">
+          <div className="p-3 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative w-10 h-10 flex-shrink-0">
+                <div className="relative w-8 h-8 flex-shrink-0">
                   <Image
                     src="/dev-ed-wave.png"
                     alt="Zarana Solanki"
-                    width={40}
-                    height={40}
+                    width={32}
+                    height={32}
                     className="rounded-full object-cover"
                   />
                 </div>
-                <h1 className="text-lg font-bold text-gray-900 dark:text-white">
+                <h1 className="text-sm font-bold text-gray-900 dark:text-white">
                   ZARANA SOLANKI
                 </h1>
               </div>
@@ -160,13 +156,13 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
                 <BsX className="text-xl" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 ml-[52px] min-h-[20px]">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 ml-[36px] min-h-[16px]">
               <TypingText words={rotatingWords} />
             </p>
           </div>
 
           {/* Navigation Items */}
-          <nav className="flex-1 p-4">
+          <nav className="flex-1 p-3 overflow-y-auto">
             <ul className="space-y-2">
               {navItems.map((item) => {
                 const Icon = item.icon;
@@ -179,7 +175,7 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
                         setIsSidebarOpen(false);
                       }}
                       className={`
-                        w-full flex items-center gap-3 px-4 py-3 rounded-lg
+                        w-full flex items-center gap-2 px-3 py-2 rounded-lg
                         transition-all duration-200
                         ${
                           isActive
@@ -188,7 +184,7 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
                         }
                       `}
                     >
-                      <Icon className="text-lg" />
+                      <Icon className="text-base" />
                       <span className="font-medium">{item.label}</span>
                     </button>
                   </li>
@@ -198,28 +194,28 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-800 space-y-3">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-800 space-y-2 flex-shrink-0">
             <button
               onClick={switchMode}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm"
             >
-              <span className="text-lg">💬</span>
+              <span className="text-base">💬</span>
               <span className="font-medium">Chat Mode</span>
             </button>
 
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm"
               aria-label="Toggle dark mode"
             >
               {darkMode ? (
                 <>
-                  <BsFillSunFill className="text-lg text-yellow-400" />
+                  <BsFillSunFill className="text-base text-yellow-400" />
                   <span className="font-medium">Light Mode</span>
                 </>
               ) : (
                 <>
-                  <BsFillMoonStarsFill className="text-lg" />
+                  <BsFillMoonStarsFill className="text-base" />
                   <span className="font-medium">Dark Mode</span>
                 </>
               )}

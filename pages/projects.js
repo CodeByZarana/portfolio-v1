@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
 
 const featuredProjects = [
@@ -94,103 +95,208 @@ const allProjects = [
   }
 ];
 
+// Simple Background Animation Component
+function ProjectsBackground() {
+  const dots = Array.from({ length: 25 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 2,
+    duration: 3 + Math.random() * 2,
+  }));
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {dots.map((dot) => (
+        <motion.div
+          key={dot.id}
+          className="absolute w-2 h-2 bg-mocha rounded-full"
+          style={{
+            left: `${dot.x}%`,
+            top: `${dot.y}%`,
+          }}
+          animate={{
+            y: [0, -40, 0],
+            x: [0, 20, 0],
+            opacity: [0.4, 0.8, 0.4],
+            scale: [1, 1.8, 1],
+          }}
+          transition={{
+            duration: dot.duration,
+            delay: dot.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+      
+      {/* Animated gradient orbs */}
+      <motion.div
+        className="absolute top-20 right-20 w-64 h-64 bg-mocha/20 dark:bg-mocha/25 rounded-full blur-3xl"
+        animate={{
+          x: [0, 50, 0],
+          y: [0, 30, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 left-20 w-80 h-80 bg-forest/20 dark:bg-forest/25 rounded-full blur-3xl"
+        animate={{
+          x: [0, -40, 0],
+          y: [0, -20, 0],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </div>
+  );
+}
+
 export default function FeaturedProjects() {
   const [showAll, setShowAll] = useState(false);
 
   return (
-    <section id="work" className="section-padding bg-minimal">
-      <div className="container-minimal">
+    <section id="work" className="section-padding bg-minimal relative overflow-hidden">
+      <ProjectsBackground />
+      <div className="container-minimal relative z-10">
         
         {/* Section Heading */}
-        <h2 className="section-heading text-center mb-16">
-          Selected Work
-        </h2>
+        <motion.h2 
+          className="section-heading text-center mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Featured Projects
+        </motion.h2>
 
         {/* Featured Projects - Top 3 */}
-        <div className="space-y-24 mb-16">
+        <div className="space-y-3 mb-4 max-w-4xl mx-auto">
           {featuredProjects.map((project, index) => (
-            <div 
+            <motion.div 
               key={index}
-              className="project-card-minimal group"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{ y: -2 }}
+              className="project-card-minimal group border border-gray-200 dark:border-gray-800"
             >
-              {/* Project Image */}
-              <div className="image-overlay aspect-video relative overflow-hidden">
-                <Image
-                  src={project.imageUrl}
-                  alt={project.title}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-
-              {/* Project Info */}
-              <div className="p-8 md:p-12">
-                <h3 className="text-3xl md:text-4xl font-bold mb-4 group-hover:text-mocha transition-colors">
-                  {project.title}
-                </h3>
-                
-                <p className="text-lg text-minimal-dark mb-4 leading-relaxed">
-                  {project.description}
-                </p>
-
-                <p className="text-base text-minimal-dark mb-6 leading-relaxed">
-                  {project.longDescription}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-6">
-                  {project.technologies.map((tech, techIndex) => (
-                    <span key={techIndex} className="tech-badge">
-                      {tech}
-                    </span>
-                  ))}
+              <div className="flex gap-4 p-3">
+                {/* Project Image - Smaller */}
+                <div className="w-32 md:w-40 h-24 md:h-28 flex-shrink-0 relative overflow-hidden rounded-md border border-gray-200 dark:border-gray-800 shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                  <Image
+                    src={project.imageUrl}
+                    alt={project.title}
+                    layout="fill"
+                    objectFit="cover"
+                    className="transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
-                {/* Links */}
-                <div className="flex gap-4">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-semibold hover:text-mocha transition-colors"
-                  >
-                    <AiOutlineGithub className="text-xl" />
-                    View Code
-                  </a>
-                  {project.liveUrl && (
-                    <a
-                      href={project.liveUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm font-semibold hover:text-mocha transition-colors"
-                    >
-                      <AiOutlineLink className="text-xl" />
-                      Live Demo
-                    </a>
-                  )}
+                {/* Project Info */}
+                <div className="flex-1 min-w-0 flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-sm md:text-base font-bold mb-1.5 group-hover:text-mocha transition-colors duration-200 text-gray-900 dark:text-white">
+                      {project.title}
+                    </h3>
+                    
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-1.5 leading-relaxed line-clamp-1 font-medium">
+                      {project.description}
+                    </p>
+
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed line-clamp-2">
+                      {project.longDescription}
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Tech Stack */}
+                    <div className="flex flex-wrap gap-1.5 mb-2.5">
+                      {project.technologies.map((tech, techIndex) => (
+                        <motion.span 
+                          key={techIndex} 
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1 + techIndex * 0.03 + 0.2 }}
+                          whileHover={{ scale: 1.05 }}
+                          className="tech-badge text-xs py-1 px-2"
+                        >
+                          {tech}
+                        </motion.span>
+                      ))}
+                    </div>
+
+                    {/* Links */}
+                    <div className="flex gap-3">
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:text-mocha transition-colors duration-200"
+                      >
+                        <AiOutlineGithub className="text-sm" />
+                        <span>Code</span>
+                      </a>
+                      {project.liveUrl && (
+                        <a
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:text-mocha transition-colors duration-200"
+                        >
+                          <AiOutlineLink className="text-sm" />
+                          <span>Demo</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* View All Projects Button */}
-        <div className="text-center">
-          <button
+        <motion.div 
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <motion.button
             onClick={() => setShowAll(!showAll)}
             className="link-minimal text-lg"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             {showAll ? 'Show Less' : `View All ${allProjects.length + 3} Projects`}
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
 
         {/* All Other Projects - Grid */}
         {showAll && (
-          <div className="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <motion.div 
+            className="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             {allProjects.map((project, index) => (
-              <div 
+              <motion.div 
                 key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                whileHover={{ y: -5 }}
                 className="project-card-minimal group"
               >
                 {/* Project Image */}
@@ -239,9 +345,9 @@ export default function FeaturedProjects() {
                     View Code
                   </a>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
       </div>
     </section>

@@ -57,22 +57,22 @@ const Certificates = () => {
     <section id="certificates" className="section-padding bg-minimal">
       <div className="container-minimal max-w-6xl">
         <h2 className="section-heading text-center mb-16">Certificates</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {certificates.map((certificate, index) => (
             <div key={index} className="flip-card">
               <div className="flip-card-inner">
-                <div className="flip-card-front p-6 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                  <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{certificate.title}</h3>
-                  <p className="text-minimal-dark">{certificate.organization}</p>
-                  <p className="text-sm text-minimal-dark">{certificate.date}</p>
+                <div className="flip-card-front p-4 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <h3 className="text-base font-semibold mb-3 text-gray-900 dark:text-white line-clamp-2">{certificate.title}</h3>
+                  <p className="text-sm text-minimal-dark mb-1">{certificate.organization}</p>
+                  <p className="text-xs text-minimal-dark">{certificate.date}</p>
                 </div>
-                <div className="flip-card-back p-6 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                  <p className="text-minimal-dark mb-4">{certificate.details}</p>
+                <div className="flip-card-back p-4 rounded-lg shadow-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <p className="text-sm text-minimal-dark mb-4 line-clamp-4">{certificate.details}</p>
                   <a
                     href={certificate.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-minimal btn-primary-minimal inline-block"
+                    className="btn-minimal btn-primary-minimal inline-block text-sm py-2 px-4"
                   >
                     View Certificate
                   </a>
