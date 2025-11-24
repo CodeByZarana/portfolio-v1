@@ -3,7 +3,7 @@ import { AiOutlineSend, AiOutlineGithub, AiOutlineDownload } from 'react-icons/a
 import { FiExternalLink } from 'react-icons/fi';
 import { BsFillSunFill, BsFillMoonStarsFill, BsList, BsX } from 'react-icons/bs';
 import Image from 'next/image';
-import { detectIntent, generateResponse, portfolioData } from './chat-bot';
+import { detectIntent, generateResponse, portfolioData } from '../components/chat-bot';
 
 // Message Component
 const Message = ({ message, isUser }) => {
