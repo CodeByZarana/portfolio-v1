@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { HiOutlineAcademicCap, HiOutlineLocationMarker } from "react-icons/hi";
 import { FaGraduationCap } from "react-icons/fa";
@@ -42,20 +42,50 @@ const education = [
 ];
 
 const Education = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section id="education" className="section-padding bg-minimal relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-5 dark:opacity-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-mocha rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-forest rounded-full blur-3xl"></div>
+      {/* Background decoration - Simple on mobile */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Mobile: One simple gradient orb */}
+        <motion.div
+          className="md:hidden absolute top-1/2 left-1/2 w-96 h-96 bg-forest/25 dark:bg-forest/30 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
+          animate={{
+            scale: [1, 1.4, 1],
+            opacity: [0.5, 0.8, 0.5],
+            x: [0, -40, 0],
+            y: [0, 35, 0],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Desktop: Static decorations */}
+        <div className="hidden md:block opacity-5 dark:opacity-10">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-mocha rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-forest rounded-full blur-3xl"></div>
+        </div>
       </div>
 
       <div className="container-minimal max-w-5xl relative z-10">
         <motion.h2 
           className="section-heading text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: isMobile ? 20 : -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: isMobile ? 0.4 : 0.6 }}
         >
           Education
         </motion.h2>
@@ -74,9 +104,9 @@ const Education = () => {
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  initial={{ opacity: 0, y: isMobile ? 20 : -30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: isMobile ? 0.4 : 0.6, delay: isMobile ? index * 0.1 : index * 0.2 }}
                   className="relative"
                 >
                   {/* Timeline dot */}
@@ -151,12 +181,8 @@ const Education = () => {
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                           {item.courses.map((course, courseIndex) => (
-                            <motion.span
+                            <span
                               key={courseIndex}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              transition={{ delay: index * 0.2 + courseIndex * 0.05 + 0.4 }}
-                              whileHover={{ scale: 1.1 }}
                               className={`px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded-md text-xs font-medium text-gray-700 dark:text-gray-300 transition-colors cursor-default ${
                                 item.accentColor === 'mocha' 
                                   ? 'hover:bg-mocha hover:text-white dark:hover:bg-mocha' 
@@ -164,7 +190,7 @@ const Education = () => {
                               }`}
                             >
                               {course}
-                            </motion.span>
+                            </span>
                           ))}
                         </div>
                       </div>

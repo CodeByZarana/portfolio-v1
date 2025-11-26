@@ -14,6 +14,7 @@ import {
 } from 'react-icons/si';
 import { FaJava } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const techStack = [
   { name: 'JavaScript', icon: SiJavascript, color: '#F7DF1E' },
@@ -31,57 +32,88 @@ const techStack = [
 ];
 
 export default function AboutMinimal() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
+        staggerChildren: isMobile ? 0.05 : 0.1,
+        duration: isMobile ? 0.4 : 0.6
       }
     }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: isMobile ? 20 : 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6
+        duration: isMobile ? 0.4 : 0.6
       }
     }
   };
 
   return (
     <section id="about" className="section-padding bg-minimal relative overflow-hidden">
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements - Simple on mobile */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Mobile: One simple gradient orb */}
         <motion.div
-          className="absolute top-10 left-10 w-96 h-96 bg-mocha/10 dark:bg-mocha/5 rounded-full blur-3xl"
+          className="md:hidden absolute top-1/4 left-1/3 w-80 h-80 bg-mocha/20 dark:bg-mocha/25 rounded-full blur-3xl"
           animate={{
-            x: [0, 100, 0],
-            y: [0, 50, 0],
-            scale: [1, 1.2, 1],
+            scale: [1, 1.4, 1],
+            opacity: [0.5, 0.8, 0.5],
+            x: [0, 40, 0],
+            y: [0, -35, 0],
           }}
           transition={{
-            duration: 15,
+            duration: 7,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
-        <motion.div
-          className="absolute bottom-10 right-10 w-96 h-96 bg-forest/10 dark:bg-forest/5 rounded-full blur-3xl"
-          animate={{
-            x: [0, -80, 0],
-            y: [0, -40, 0],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+        
+        {/* Desktop: Full animations */}
+        <div className="hidden md:block">
+          <motion.div
+            className="absolute top-10 left-10 w-96 h-96 bg-mocha/10 dark:bg-mocha/5 rounded-full blur-3xl"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, 50, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-10 right-10 w-96 h-96 bg-forest/10 dark:bg-forest/5 rounded-full blur-3xl"
+            animate={{
+              x: [0, -80, 0],
+              y: [0, -40, 0],
+              scale: [1, 1.3, 1],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        </div>
       </div>
 
       <div className="container-minimal max-w-4xl relative z-10">
@@ -132,59 +164,29 @@ export default function AboutMinimal() {
           <motion.div 
             className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 md:p-8 mb-16 border border-gray-200 dark:border-gray-800 shadow-lg"
             variants={itemVariants}
-            whileHover={{ scale: 1.02, y: -5 }}
+            whileHover={isMobile ? {} : { scale: 1.02, y: -5 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
-                <motion.p 
-                  className="text-sm uppercase tracking-wider text-minimal-dark mb-2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
+                <p className="text-sm uppercase tracking-wider text-minimal-dark mb-2">
                   Currently
-                </motion.p>
-                <motion.h3 
-                  className="text-xl md:text-2xl font-bold mb-2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                >
+                </p>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">
                   .NET Software Developer Intern
-                </motion.h3>
-                <motion.p 
-                  className="text-base text-minimal-dark"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                >
+                </h3>
+                <p className="text-base text-minimal-dark">
                   FGF Brands · Jan 2025 - Present
-                </motion.p>
+                </p>
               </div>
-              <motion.div 
-                className="flex-shrink-0"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                whileHover={{ 
-                  rotate: 360, 
-                  scale: 1.1,
-                  transition: { type: "spring", stiffness: 300 }
-                }}
-              >
+              <div className="flex-shrink-0">
                 <div className="w-16 h-16 bg-mocha rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-2xl text-white font-bold">FGF</span>
                 </div>
-              </motion.div>
+              </div>
             </div>
-          
-            <motion.div 
-              className="mt-6 space-y-2.5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-            >
+            
+            <div className="mt-6 space-y-2.5">
               {[
                 "Developing scalable RESTful APIs using ASP.NET MVC and C#",
                 "Implementing CI/CD pipelines with Azure DevOps",
@@ -195,21 +197,11 @@ export default function AboutMinimal() {
                 "Wonder Connect / Smart Connect: Reduced API response times from 10 minutes to under 10 seconds, implemented SSO authentication",
                 "User Admin & AMP Identity: Added user impersonation architecture and delivered UI/backend fixes during production stabilization"
               ].map((item, index) => (
-                <motion.div
+                <div
                   key={index}
                   className="flex items-start gap-2.5"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 + index * 0.1 }}
-                  whileHover={{ x: 5 }}
                 >
-                  <motion.span 
-                    className="text-mocha text-base mt-0.5"
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ delay: 0.9 + index * 0.1, duration: 0.3 }}
-                  >
-                    •
-                  </motion.span>
+                  <span className="text-mocha text-base mt-0.5">•</span>
                   <p className="text-sm text-minimal-dark">
                     {item.includes(':') ? (
                       <>
@@ -220,9 +212,9 @@ export default function AboutMinimal() {
                       item
                     )}
                   </p>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* Previous Role - Condensed */}

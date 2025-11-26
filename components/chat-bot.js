@@ -41,22 +41,38 @@ export const portfolioData = {
   projects: [
     {
       id: 1,
-      name: "Tiffin Service Web Application",
-      description: "A full-stack subscription platform for delivering homemade food with real-time order tracking, user authentication, and an admin dashboard.",
-      technologies: ["ASP.NET Core MVC", "C#", "SQL Server", "Entity Framework", "Bootstrap"],
-      github: "https://github.com/CodeByZarana/Tiffin-Service-Web-Application",
+      name: "AI Business Intelligence Platform",
+      description: "An intelligent BI platform built with LangChain and FastAPI that transforms data into actionable insights using AI-powered analytics and natural language processing.",
+      technologies: ["Python", "FastAPI", "LangChain", "AI/ML", "Data Analytics", "OpenAI", "PostgreSQL"],
+      github: "https://github.com/CodeByZarana",
+      liveUrl: "https://medium.com/@codebyzarana/building-an-ai-business-intelligence-platform-with-langchain-and-fastapi-from-junior-developer-to-458085dd4124",
       highlights: [
-        "Built with ASP.NET Core MVC and SQL Server",
-        "Features user authentication and authorization",
-        "Real-time order tracking system",
-        "Admin dashboard for management",
-        "Subscription management system"
+        "Built with LangChain for AI-driven data analysis",
+        "FastAPI for high-performance API development",
+        "Automated report generation",
+        "Predictive analytics and interactive dashboards",
+        "Natural language processing capabilities"
       ],
-      image: "/tiffin.png",
+      image: "/dashai.png",
       featured: true
     },
     {
       id: 2,
+      name: "Job Matching Agent",
+      description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning for skills compatibility analysis.",
+      technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "NLP"],
+      github: "https://github.com/CodeByZarana/Job-Matching-Agent",
+      highlights: [
+        "Uses TF-IDF vectorization and cosine similarity",
+        "Calculates match scores for job compatibility",
+        "Helps job seekers find the best opportunities",
+        "Skills and experience alignment"
+      ],
+      image: "/job-agent.png",
+      featured: true
+    },
+    {
+      id: 3,
       name: "Diabetes Detector",
       description: "An Android application utilizing OCR and machine learning to detect potential diabetes symptoms through image recognition.",
       technologies: ["Java", "Android SDK", "OCR", "Machine Learning", "TensorFlow"],
@@ -68,21 +84,6 @@ export const portfolioData = {
         "Provides instant health insights"
       ],
       image: "/diabetes.png",
-      featured: true
-    },
-    {
-      id: 3,
-      name: "Job Matching Agent",
-      description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning.",
-      technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "TF-IDF"],
-      github: "https://github.com/CodeByZarana/Job-Matching-Agent",
-      highlights: [
-        "Uses TF-IDF vectorization for text analysis",
-        "Calculates skills compatibility scores",
-        "Category matching and experience alignment",
-        "Helps job seekers find best opportunities"
-      ],
-      image: "/job-agent.png",
       featured: true
     }
   ],
@@ -129,9 +130,9 @@ export const detectIntent = (message) => {
   }
   
   // Specific project
-  if (/tiffin/i.test(lowerMessage)) return 'project_tiffin';
+  if (/ai.*business|business.*intelligence|bi.*platform|dashai/i.test(lowerMessage)) return 'project_ai_bi';
+  if (/job.*match|matching.*agent/i.test(lowerMessage)) return 'project_job';
   if (/diabetes/i.test(lowerMessage)) return 'project_diabetes';
-  if (/job.*match/i.test(lowerMessage)) return 'project_job';
   
   // Experience
   if (/(experience|work.*history|job|role|position|intern|fgf|awakeen)/i.test(lowerMessage)) {
@@ -186,18 +187,29 @@ export const generateResponse = (intent, userMessage = '') => {
     projects: {
       text: "Zarana has built several impressive projects! Here are her top 3 featured projects:",
       type: 'project_cards',
-      data: portfolioData.projects.filter(p => p.featured),
+      data: portfolioData.projects.filter(p => p.featured).slice(0, 3),
       suggestions: [
-        "Tell me more about the Tiffin Service app",
-        "Show me the Diabetes Detector project",
-        "What about the Job Matching Agent?"
+        "Tell me more about the AI BI Platform",
+        "Show me the Job Matching Agent",
+        "What about the Diabetes Detector?"
       ]
     },
     
-    project_tiffin: {
-      text: "The **Tiffin Service Web Application** is one of Zarana's standout projects! 🍱\n\nIt's a full-stack subscription platform for delivering homemade food, built with ASP.NET Core MVC, C#, and SQL Server.\n\n**Key Features:**\n• User authentication & authorization\n• Real-time order tracking\n• Subscription management\n• Admin dashboard\n\nThis project demonstrates Zarana's expertise in building scalable, enterprise-level applications with clean architecture and robust database design.",
+    project_ai_bi: {
+      text: "The **AI Business Intelligence Platform** is one of Zarana's standout projects! 🤖\n\nIt's an intelligent BI platform built with LangChain and FastAPI that transforms data into actionable insights using AI-powered analytics and natural language processing.\n\n**Key Features:**\n• LangChain for AI-driven data analysis\n• FastAPI for high-performance API development\n• Automated report generation\n• Predictive analytics and interactive dashboards\n• Natural language processing capabilities\n\nThis project demonstrates Zarana's expertise in AI/ML, data analytics, and building comprehensive business intelligence solutions.",
       type: 'project_card',
       data: portfolioData.projects[0],
+      suggestions: [
+        "Show me other projects",
+        "What technologies does she know?",
+        "Tell me about her experience"
+      ]
+    },
+    
+    project_job: {
+      text: "The **Job Matching Agent** is an intelligent Python tool that matches resumes with job descriptions using NLP and machine learning! 💼\n\n**Key Features:**\n• Uses TF-IDF vectorization and cosine similarity\n• Calculates match scores for job compatibility\n• Helps job seekers find the best opportunities\n• Skills and experience alignment\n\nBuilt with Python, scikit-learn, NLTK, and PyPDF2, this project showcases Zarana's skills in natural language processing and machine learning.",
+      type: 'project_card',
+      data: portfolioData.projects[1],
       suggestions: [
         "Show me other projects",
         "What technologies does she know?",

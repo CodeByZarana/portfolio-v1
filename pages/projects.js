@@ -1,16 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
 
 const featuredProjects = [
   {
-    title: "Tiffin Service Web Application",
-    description: "A full-stack subscription platform for delivering homemade food with real-time order tracking, user authentication, and an admin dashboard.",
-    longDescription: "Built with ASP.NET Core MVC and SQL Server, this application demonstrates enterprise-level architecture with clean separation of concerns, robust authentication, and scalable database design.",
-    technologies: ["ASP.NET Core MVC", "C#", "SQL Server", "Entity Framework", "Bootstrap"],
-    imageUrl: "/tiffin.png",
-    githubUrl: "https://github.com/CodeByZarana/Tiffin-Service-Web-Application",
+    title: "AI Business Intelligence Platform",
+    description: "An intelligent BI platform built with LangChain and FastAPI that transforms data into actionable insights using AI-powered analytics and natural language processing.",
+    longDescription: "A comprehensive business intelligence solution that leverages LangChain for AI-driven data analysis and FastAPI for high-performance API development. Features include automated report generation, predictive analytics, and interactive dashboards that help businesses make data-driven decisions.",
+    technologies: ["Python", "FastAPI", "LangChain", "AI/ML", "Data Analytics", "OpenAI", "PostgreSQL"],
+    imageUrl: "/dashai.png",
+    githubUrl: "https://github.com/CodeByZarana", // Update with actual repo if available
+    liveUrl: "https://medium.com/@codebyzarana/building-an-ai-business-intelligence-platform-with-langchain-and-fastapi-from-junior-developer-to-458085dd4124",
+    featured: true
+  },
+  {
+    title: "Job Matching Agent",
+    description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning for skills compatibility analysis.",
+    longDescription: "Uses TF-IDF vectorization and cosine similarity to calculate match scores. Helps job seekers find the best opportunities based on their skills and experience.",
+    technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "NLP"],
+    imageUrl: "/job-agent.png",
+    githubUrl: "https://github.com/CodeByZarana/Job-Matching-Agent",
     liveUrl: null,
     featured: true
   },
@@ -21,16 +31,6 @@ const featuredProjects = [
     technologies: ["Java", "Android SDK", "OCR", "Machine Learning", "TensorFlow"],
     imageUrl: "/diabetes.png",
     githubUrl: "https://github.com/CodeByZarana/Diabetes-Detector",
-    liveUrl: null,
-    featured: true
-  },
-  {
-    title: "Job Matching Agent",
-    description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning for skills compatibility analysis.",
-    longDescription: "Uses TF-IDF vectorization and cosine similarity to calculate match scores. Helps job seekers find the best opportunities based on their skills and experience.",
-    technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "NLP"],
-    imageUrl: "/job-agent.png",
-    githubUrl: "https://github.com/CodeByZarana/Job-Matching-Agent",
     liveUrl: null,
     featured: true
   }
@@ -107,62 +107,92 @@ function ProjectsBackground() {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {dots.map((dot) => (
+      {/* Mobile: One simple gradient orb - Always rendered, CSS controls visibility */}
+      <motion.div
+        className="md:hidden absolute top-1/2 right-1/4 w-80 h-80 bg-forest/20 dark:bg-forest/25 rounded-full blur-3xl"
+        animate={{
+          scale: [1, 1.4, 1],
+          opacity: [0.5, 0.8, 0.5],
+          x: [0, 40, 0],
+          y: [0, -30, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      {/* Desktop: Full animations */}
+      <div className="hidden md:block">
+
+        {dots.map((dot) => (
+          <motion.div
+            key={dot.id}
+            className="absolute w-2 h-2 bg-mocha dark:bg-forest rounded-full"
+            style={{
+              left: `${dot.x}%`,
+              top: `${dot.y}%`,
+            }}
+            animate={{
+              y: [0, -40, 0],
+              x: [0, 20, 0],
+              opacity: [0.4, 0.8, 0.4],
+              scale: [1, 1.8, 1],
+            }}
+            transition={{
+              duration: dot.duration,
+              delay: dot.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+        
+        {/* Animated gradient orbs */}
         <motion.div
-          key={dot.id}
-          className="absolute w-2 h-2 bg-mocha rounded-full"
-          style={{
-            left: `${dot.x}%`,
-            top: `${dot.y}%`,
-          }}
+          className="absolute top-20 right-20 w-64 h-64 bg-mocha/20 dark:bg-mocha/25 rounded-full blur-3xl"
           animate={{
-            y: [0, -40, 0],
-            x: [0, 20, 0],
-            opacity: [0.4, 0.8, 0.4],
-            scale: [1, 1.8, 1],
+            x: [0, 50, 0],
+            y: [0, 30, 0],
+            scale: [1, 1.2, 1],
           }}
           transition={{
-            duration: dot.duration,
-            delay: dot.delay,
+            duration: 8,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         />
-      ))}
-      
-      {/* Animated gradient orbs */}
-      <motion.div
-        className="absolute top-20 right-20 w-64 h-64 bg-mocha/20 dark:bg-mocha/25 rounded-full blur-3xl"
-        animate={{
-          x: [0, 50, 0],
-          y: [0, 30, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      <motion.div
-        className="absolute bottom-20 left-20 w-80 h-80 bg-forest/20 dark:bg-forest/25 rounded-full blur-3xl"
-        animate={{
-          x: [0, -40, 0],
-          y: [0, -20, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
+        <motion.div
+          className="absolute bottom-20 left-20 w-80 h-80 bg-forest/20 dark:bg-forest/25 rounded-full blur-3xl"
+          animate={{
+            x: [0, -40, 0],
+            y: [0, -20, 0],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
     </div>
   );
 }
 
 export default function FeaturedProjects() {
   const [showAll, setShowAll] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <section id="work" className="section-padding bg-minimal relative overflow-hidden">
@@ -172,9 +202,9 @@ export default function FeaturedProjects() {
         {/* Section Heading */}
         <motion.h2 
           className="section-heading text-center mb-6"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: isMobile ? 20 : -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: isMobile ? 0.4 : 0.6 }}
         >
           Featured Projects
         </motion.h2>
@@ -184,10 +214,10 @@ export default function FeaturedProjects() {
           {featuredProjects.map((project, index) => (
             <motion.div 
               key={index}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: isMobile ? 20 : 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -2 }}
+              transition={{ duration: isMobile ? 0.4 : 0.5, delay: isMobile ? index * 0.1 : index * 0.1 }}
+              whileHover={isMobile ? {} : { y: -2 }}
               className="project-card-minimal group border border-gray-200 dark:border-gray-800"
             >
               <div className="flex gap-4 p-3">
@@ -209,11 +239,11 @@ export default function FeaturedProjects() {
                       {project.title}
                     </h3>
                     
-                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-1.5 leading-relaxed line-clamp-1 font-medium">
+                    <p className="text-xs text-gray-700 dark:text-gray-300 mb-1.5 leading-relaxed font-medium">
                       {project.description}
                     </p>
 
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
                       {project.longDescription}
                     </p>
                   </div>
@@ -224,10 +254,10 @@ export default function FeaturedProjects() {
                       {project.technologies.map((tech, techIndex) => (
                         <motion.span 
                           key={techIndex} 
-                          initial={{ opacity: 0, scale: 0.8 }}
+                          initial={{ opacity: isMobile ? 1 : 0, scale: isMobile ? 1 : 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: index * 0.1 + techIndex * 0.03 + 0.2 }}
-                          whileHover={{ scale: 1.05 }}
+                          transition={{ delay: isMobile ? 0 : index * 0.1 + techIndex * 0.03 + 0.2 }}
+                          whileHover={isMobile ? {} : { scale: 1.05 }}
                           className="tech-badge text-xs py-1 px-2"
                         >
                           {tech}
@@ -270,13 +300,13 @@ export default function FeaturedProjects() {
           className="text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+          transition={{ duration: isMobile ? 0.2 : 0.5, delay: isMobile ? 0 : 0.4 }}
         >
           <motion.button
             onClick={() => setShowAll(!showAll)}
             className="link-minimal text-lg"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={isMobile ? {} : { scale: 1.05 }}
+            whileTap={isMobile ? {} : { scale: 0.95 }}
           >
             {showAll ? 'Show Less' : `View All ${allProjects.length + 3} Projects`}
           </motion.button>
@@ -288,15 +318,15 @@ export default function FeaturedProjects() {
             className="mt-24 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: isMobile ? 0.2 : 0.5 }}
           >
             {allProjects.map((project, index) => (
               <motion.div 
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: isMobile ? 0 : 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                whileHover={{ y: -5 }}
+                transition={{ duration: isMobile ? 0.2 : 0.4, delay: isMobile ? 0 : index * 0.05 }}
+                whileHover={isMobile ? {} : { y: -5 }}
                 className="project-card-minimal group"
               >
                 {/* Project Image */}

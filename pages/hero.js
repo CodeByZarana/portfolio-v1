@@ -18,46 +18,65 @@ function TechGridBackground() {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Animated Grid */}
+      {/* Mobile: One simple gradient orb - Always rendered, CSS controls visibility */}
       <motion.div
-        className="tech-grid-bg"
+        className="md:hidden absolute top-1/2 left-1/2 w-96 h-96 bg-mocha/20 dark:bg-mocha/25 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"
         animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
+          scale: [1, 1.4, 1],
+          opacity: [0.5, 0.8, 0.5],
+          x: [0, 50, 0],
+          y: [0, -40, 0],
         }}
         transition={{
-          duration: 20,
+          duration: 8,
           repeat: Infinity,
-          ease: 'linear',
+          ease: "easeInOut",
         }}
       />
       
-      {/* Floating Code Brackets */}
-      {brackets.map((bracket, index) => (
+      {/* Desktop: Full animations */}
+      <div className="hidden md:block">
+
+        {/* Animated Grid */}
         <motion.div
-          key={index}
-          className="absolute font-mono text-mocha dark:text-forest"
-          style={{
-            left: bracket.x,
-            top: bracket.y,
-            fontSize: '1.25rem',
-          }}
+          className="tech-grid-bg"
           animate={{
-            y: [0, -30, 0],
-            x: [0, 20, 0],
-            rotate: [0, 5, -5, 0],
-            opacity: [0.25, 0.5, 0.25],
+            backgroundPosition: ['0% 0%', '100% 100%'],
           }}
           transition={{
-            duration: 4 + index,
+            duration: 20,
             repeat: Infinity,
-            delay: bracket.delay,
-            ease: 'easeInOut',
+            ease: 'linear',
           }}
-        >
-          {bracket.text}
-        </motion.div>
-      ))}
-      
+        />
+        
+        {/* Floating Code Brackets */}
+        {brackets.map((bracket, index) => (
+          <motion.div
+            key={index}
+            className="absolute font-mono text-mocha dark:text-forest"
+            style={{
+              left: bracket.x,
+              top: bracket.y,
+              fontSize: '1.25rem',
+            }}
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              rotate: [0, 5, -5, 0],
+              opacity: [0.25, 0.5, 0.25],
+            }}
+            transition={{
+              duration: 4 + index,
+              repeat: Infinity,
+              delay: bracket.delay,
+              ease: 'easeInOut',
+            }}
+          >
+            {bracket.text}
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

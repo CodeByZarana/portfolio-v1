@@ -8,8 +8,9 @@ import AboutMinimal from './aboutme';
 import ContactMinimal from './contact';
 import Education from './education';
 import Certificates from './certificates';
+import Blogs from './blogs';
 import { BsFillSunFill, BsFillMoonStarsFill, BsList, BsX } from 'react-icons/bs';
-import { AiOutlineHome, AiOutlineFolderOpen, AiOutlineUser, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineHome, AiOutlineFolderOpen, AiOutlineUser, AiOutlineMail, AiOutlineBook } from 'react-icons/ai';
 import { HiOutlineAcademicCap } from 'react-icons/hi';
 import { FaAward } from 'react-icons/fa';
 
@@ -94,6 +95,7 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
     { id: 'home', label: 'Home', icon: AiOutlineHome },
     { id: 'about', label: 'About', icon: AiOutlineUser },
     { id: 'work', label: 'Projects', icon: AiOutlineFolderOpen },
+    { id: 'blogs', label: 'Blogs', icon: AiOutlineBook },
     { id: 'education', label: 'Education', icon: HiOutlineAcademicCap },
     { id: 'certificates', label: 'Certificates', icon: FaAward },
     { id: 'contact', label: 'Contact', icon: AiOutlineMail },
@@ -107,6 +109,8 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
         return <FeaturedProjects />;
       case 'about':
         return <AboutMinimal />;
+      case 'blogs':
+        return <Blogs />;
       case 'education':
         return <Education />;
       case 'certificates':
@@ -116,6 +120,14 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
       default:
         return <HeroMinimal />;
     }
+  };
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setIsSidebarOpen(false);
   };
 
   return (
@@ -171,8 +183,13 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
                   <li key={item.id}>
                     <button
                       onClick={() => {
-                        setActiveSection(item.id);
-                        setIsSidebarOpen(false);
+                        // On mobile, scroll to section; on desktop, switch section
+                        if (window.innerWidth < 768) {
+                          scrollToSection(item.id);
+                        } else {
+                          setActiveSection(item.id);
+                          setIsSidebarOpen(false);
+                        }
                       }}
                       className={`
                         w-full flex items-center gap-2 px-3 py-2 rounded-lg
@@ -244,14 +261,60 @@ export default function PortfolioWithToggle({ darkMode, setDarkMode }) {
             <BsList className="text-2xl" />
           </button>
           <h2 className="text-lg font-bold text-gray-900 dark:text-white">
-            {navItems.find(item => item.id === activeSection)?.label || 'Home'}
+            Portfolio
           </h2>
-          <div className="w-10" /> {/* Spacer for centering */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2 hover:opacity-70 transition-opacity text-gray-900 dark:text-white"
+            aria-label="Toggle dark mode"
+          >
+            {darkMode ? (
+              <BsFillSunFill className="text-xl text-yellow-400" />
+            ) : (
+              <BsFillMoonStarsFill className="text-xl" />
+            )}
+          </button>
         </div>
 
         {/* Section Content */}
         <div className="min-h-full">
-          {renderSection()}
+          {/* Mobile: Show all sections for scrolling with unified animation */}
+          <motion.div 
+            className="md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div id="home">
+              <HeroMinimal onNavigate={(section) => {
+                setActiveSection(section);
+                setTimeout(() => scrollToSection(section), 100);
+              }} />
+            </div>
+            <div id="about">
+              <AboutMinimal />
+            </div>
+            <div id="work">
+              <FeaturedProjects />
+            </div>
+            <div id="blogs">
+              <Blogs />
+            </div>
+            <div id="education">
+              <Education />
+            </div>
+            <div id="certificates">
+              <Certificates />
+            </div>
+            <div id="contact">
+              <ContactMinimal />
+            </div>
+          </motion.div>
+          
+          {/* Desktop: Show only active section */}
+          <div className="hidden md:block">
+            {renderSection()}
+          </div>
         </div>
       </main>
     </div>
