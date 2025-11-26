@@ -80,13 +80,34 @@ export default function Blogs() {
         const data = await response.json();
         
         if (data.status === 'ok' && data.items) {
-          setBlogs(data.items.map(item => ({
+          const fetchedBlogs = data.items.map(item => ({
             title: item.title,
             link: item.link,
             pubDate: item.pubDate,
             description: item.description,
             thumbnail: item.thumbnail || null,
-          })));
+          }));
+          
+          // Ensure specific blog is included (add if not already in the list)
+          const secureImpersonationBlog = {
+            title: "Building a Secure User Impersonation Feature for Multi-Tenant Enterprise Applications",
+            link: "https://medium.com/@codebyzarana/building-a-secure-user-impersonation-feature-for-multi-tenant-enterprise-applications-21e79476240c",
+            pubDate: new Date().toISOString(),
+            description: "A guide to implementing secure user impersonation in multi-tenant enterprise applications.",
+            thumbnail: null,
+          };
+          
+          // Check if blog already exists in fetched list
+          const blogExists = fetchedBlogs.some(blog => 
+            blog.link.includes('building-a-secure-user-impersonation-feature-for-multi-tenant-enterprise-applications')
+          );
+          
+          // If not found, add it to the beginning of the list
+          if (!blogExists) {
+            setBlogs([secureImpersonationBlog, ...fetchedBlogs]);
+          } else {
+            setBlogs(fetchedBlogs);
+          }
         }
       } catch (error) {
         console.error('Error fetching blogs:', error);
