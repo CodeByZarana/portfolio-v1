@@ -2,6 +2,20 @@ import React from 'react';
 
 const certificates = [
   {
+    title: "Google AI Essentials",
+    organization: "Coursera",
+    date: "2024",
+    details: "Covers Google AI essentials, machine learning fundamentals, and practical AI applications.",
+    link: "https://www.coursera.org/account/accomplishments/specialization/certificate/IMG9HWGVX9QJ"
+  },
+  {
+    title: "Introduction to AI in Azure",
+    organization: "Microsoft Learn",
+    date: "2024",
+    details: "Introduction to AI services and capabilities in Microsoft Azure.",
+    link: "https://learn.microsoft.com/en-us/users/ZaranaSolanki-5180/achievements/XEMS2UJY?ref=https%3A%2F%2Fwww.linkedin.com%2F"
+  },
+  {
     title: "Complete React Native in 2021: Zero to Mastery[with Hooks]",
     organization: "Udemy",
     date: "June 2021",
