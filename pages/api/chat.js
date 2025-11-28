@@ -2,12 +2,41 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
+// Vercel serverless function timeout configuration
+export const config = {
+  maxDuration: 60, // 60 seconds max (Hobby plan limit)
+};
+
 export default async function handler(req, res) {
+  // Add CORS headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle OPTIONS request for CORS
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { message, conversationHistory } = req.body;
+
+  // Validate input
+  if (!message || message.trim() === '') {
+    return res.status(400).json({ error: 'Message is required', success: false });
+  }
+
+  // Check API key
+  if (!process.env.GOOGLE_API_KEY) {
+    console.error('GOOGLE_API_KEY is not set');
+    return res.status(500).json({ 
+      error: 'Server configuration error. Please contact support.',
+      success: false 
+    });
+  }
 
   const systemPrompt = `You are Zarana Solanki's AI portfolio assistant. Answer questions about her professionally and concisely.
 
@@ -119,52 +148,53 @@ RESPONSE GUIDELINES:
 - If asked to show/display projects, describe them with their tech stack and GitHub links`;
 
   try {
-    // Initialize Gemini model (gemini-pro doesn't support systemInstruction)
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-pro"
+    // Set timeout for the entire operation (50 seconds, less than Vercel's 60s limit)
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Request timeout')), 50000);
     });
 
-    // Build conversation history - filter out the initial bot welcome message
-    // and ensure first message is from user
-    let history = conversationHistory
-      .filter(msg => msg.content !== "Hi there! 👋 I'm Zarana's AI assistant powered by Google Gemini. I can tell you all about her projects, experience, skills, and how to get in touch.\n\nWhat would you like to know?")
-      .map(msg => ({
-        role: msg.role === "assistant" ? "model" : "user",
-        parts: [{ text: msg.content }]
-      }));
-
-    // If history is empty or starts with 'model', add a dummy user message
-    if (history.length === 0 || history[0].role === "model") {
-      history = [];
-    }
-    
-    // Prepend system prompt as first user message (workaround for gemini-pro)
-    if (history.length === 0) {
-      history.unshift({
-        role: "user",
-        parts: [{ text: "You are Zarana's AI assistant. Answer briefly and professionally about her portfolio." }]
+    const generateResponsePromise = async () => {
+      // Initialize Gemini model
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-2.5-pro",
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 800, // Reduced for faster response
+          topP: 0.9,
+        },
       });
-      history.push({
-        role: "model",
-        parts: [{ text: "Understood. I'll help answer questions about Zarana's portfolio professionally." }]
+
+      // Simplified conversation history (last 5 messages only for faster processing)
+      let history = conversationHistory
+        .slice(-5) // Only keep last 5 messages
+        .filter(msg => msg.content !== "Hi there! 👋 I'm Zarana's AI assistant powered by Google Gemini. I can tell you all about her projects, experience, skills, and how to get in touch.\n\nWhat would you like to know?")
+        .map(msg => ({
+          role: msg.role === "assistant" ? "model" : "user",
+          parts: [{ text: msg.content }]
+        }));
+
+      // If history is empty or starts with 'model', reset it
+      if (history.length === 0 || history[0].role === "model") {
+        history = [];
+      }
+
+      // Start chat
+      const chat = model.startChat({
+        history: history,
       });
-    }
 
-    // Start chat with history
-    const chat = model.startChat({
-      history: history,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1000,
-        topP: 0.9,
-      },
-    });
+      // Send message with system prompt
+      const contextualMessage = `${systemPrompt}\n\nUser Question: ${message}`;
+      const result = await chat.sendMessage(contextualMessage);
+      const response = await result.response;
+      return response.text();
+    };
 
-    // Send message and get response (include context with each message for gemini-pro)
-    const contextualMessage = `${systemPrompt}\n\nUser Question: ${message}`;
-    const result = await chat.sendMessage(contextualMessage);
-    const response = await result.response;
-    const responseText = response.text();
+    // Race between timeout and actual API call
+    const responseText = await Promise.race([
+      generateResponsePromise(),
+      timeoutPromise
+    ]);
 
     res.status(200).json({ 
       response: responseText,
@@ -173,22 +203,39 @@ RESPONSE GUIDELINES:
   } catch (error) {
     console.error('Gemini API Error:', error);
     
-    // Provide helpful error messages
-    if (error.message?.includes('API key')) {
-      res.status(401).json({ 
-        error: 'API authentication failed. Please check your Google API key.',
-        success: false 
-      });
-    } else if (error.message?.includes('quota')) {
-      res.status(429).json({ 
-        error: 'API quota exceeded. Please try again later.',
-        success: false 
-      });
-    } else {
-      res.status(500).json({ 
-        error: 'Failed to get response. Please try again.',
+    // Handle different error types
+    if (error.message === 'Request timeout') {
+      return res.status(504).json({ 
+        error: 'The request took too long to process. Please try a shorter question.',
         success: false 
       });
     }
+    
+    if (error.message?.includes('API key') || error.status === 401) {
+      return res.status(401).json({ 
+        error: 'API authentication failed. Please check your Google API key.',
+        success: false 
+      });
+    }
+    
+    if (error.message?.includes('quota') || error.status === 429) {
+      return res.status(429).json({ 
+        error: 'API quota exceeded. Please try again later.',
+        success: false 
+      });
+    }
+    
+    if (error.status === 503) {
+      return res.status(503).json({ 
+        error: 'AI service temporarily unavailable. Please try again.',
+        success: false 
+      });
+    }
+    
+    // Generic error
+    return res.status(500).json({ 
+      error: 'Failed to get response. Please try again.',
+      success: false 
+    });
   }
 }
