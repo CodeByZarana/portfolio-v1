@@ -1,9 +1,23 @@
 import { useState, useRef, useEffect } from 'react';
-import { AiOutlineSend, AiOutlineGithub, AiOutlineDownload } from 'react-icons/ai';
-import { FiExternalLink } from 'react-icons/fi';
+import { AiOutlineSend, AiOutlineGithub } from 'react-icons/ai';
 import { BsFillSunFill, BsFillMoonStarsFill, BsList, BsX } from 'react-icons/bs';
 import Image from 'next/image';
-import { detectIntent, generateResponse, portfolioData } from '../components/chat-bot';
+
+// Helper function to format markdown-style text
+const formatText = (text) => {
+  if (!text) return '';
+  
+  // Convert **bold** to <strong>
+  let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // Convert *italic* to <em>
+  formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // Convert [text](url) to links
+  formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-mocha hover:underline">$1</a>');
+  
+  return formatted;
+};
 
 // Message Component
 const Message = ({ message, isUser }) => {
@@ -21,54 +35,11 @@ const Message = ({ message, isUser }) => {
     <div className="flex justify-start mb-6">
       <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm">
         <div className="prose prose-sm dark:prose-invert max-w-none">
-          <p className="text-sm md:text-base whitespace-pre-line leading-relaxed text-gray-900 dark:text-gray-100">
-            {message.text}
-          </p>
+          <div 
+            className="text-sm md:text-base whitespace-pre-line leading-relaxed text-gray-900 dark:text-gray-100"
+            dangerouslySetInnerHTML={{ __html: formatText(message.text) }}
+          />
         </div>
-        
-        {/* Project Cards */}
-        {message.type === 'project_cards' && message.data && (
-          <div className="mt-4 space-y-3">
-            {message.data.map((project, index) => (
-              <ProjectCard key={index} project={project} />
-            ))}
-          </div>
-        )}
-        
-        {/* Single Project Card */}
-        {message.type === 'project_card' && message.data && (
-          <div className="mt-4">
-            <ProjectCard project={message.data} />
-          </div>
-        )}
-        
-        {/* Code Snippet */}
-        {message.type === 'code_snippet' && message.code && (
-          <div className="mt-4">
-            <CodeSnippet code={message.code} />
-          </div>
-        )}
-        
-        {/* Contact Card */}
-        {message.type === 'contact_card' && message.data && (
-          <div className="mt-4">
-            <ContactCard data={message.data} />
-          </div>
-        )}
-        
-        {/* Resume Download */}
-        {message.type === 'resume_download' && message.data && (
-          <div className="mt-4">
-            <a
-              href={message.data.link}
-              download
-              className="inline-flex items-center gap-2 bg-mocha text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all"
-            >
-              <AiOutlineDownload className="text-xl" />
-              Download Resume (PDF)
-            </a>
-          </div>
-        )}
         
         {/* Suggested Questions */}
         {message.suggestions && message.suggestions.length > 0 && (
@@ -78,98 +49,6 @@ const Message = ({ message, isUser }) => {
             ))}
           </div>
         )}
-      </div>
-    </div>
-  );
-};
-
-// Project Card Component
-const ProjectCard = ({ project }) => {
-  return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700">
-      {project.image && (
-        <div className="relative h-40 bg-gray-200 dark:bg-gray-800">
-          <Image
-            src={project.image}
-            alt={project.name}
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
-      )}
-      <div className="p-4">
-        <h4 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">
-          {project.name}
-        </h4>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          {project.description}
-        </p>
-        <div className="flex flex-wrap gap-2 mb-3">
-          {project.technologies.slice(0, 4).map((tech, index) => (
-            <span
-              key={index}
-              className="text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded text-gray-700 dark:text-gray-300"
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-        <a
-          href={project.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-mocha hover:underline font-semibold"
-        >
-          <AiOutlineGithub />
-          View on GitHub
-        </a>
-      </div>
-    </div>
-  );
-};
-
-// Code Snippet Component
-const CodeSnippet = ({ code }) => {
-  return (
-    <div className="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto border border-gray-700">
-      <pre className="text-sm text-gray-100">
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
-};
-
-// Contact Card Component
-const ContactCard = ({ data }) => {
-  return (
-    <div className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-md border border-gray-200 dark:border-gray-700">
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Email</p>
-          <a href={`mailto:${data.email}`} className="text-mocha font-semibold hover:underline">
-            {data.email}
-          </a>
-        </div>
-        <div className="flex gap-4">
-          <a
-            href={data.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-mocha hover:underline"
-          >
-            <FiExternalLink />
-            LinkedIn
-          </a>
-          <a
-            href={data.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-sm text-mocha hover:underline"
-          >
-            <FiExternalLink />
-            GitHub
-          </a>
-        </div>
       </div>
     </div>
   );
@@ -188,7 +67,7 @@ const SuggestionChip = ({ text }) => {
 export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
   const [messages, setMessages] = useState([
     {
-      text: "Hi there! 👋 I'm Zarana's AI assistant. I can tell you all about her projects, experience, skills, and how to get in touch.\n\nWhat would you like to know?",
+      text: "Hi there! 👋 I'm Zarana's AI assistant powered by Google Gemini. I can tell you all about her projects, experience, skills, and how to get in touch.\n\nWhat would you like to know?",
       isUser: false,
       suggestions: [
         "What projects has Zarana built?",
@@ -213,11 +92,10 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
     scrollToBottom();
   }, [messages]);
 
-  // Handle sending message
-  const handleSendMessage = (messageText) => {
+  // Handle sending message with Gemini API
+  const handleSendMessage = async (messageText) => {
     if (!messageText.trim()) return;
 
-    // Add user message
     const userMessage = {
       text: messageText,
       isUser: true
@@ -227,23 +105,59 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate typing delay
-    setTimeout(() => {
-      const intent = detectIntent(messageText);
-      const response = generateResponse(intent, messageText);
-      
-      const botMessage = {
-        text: response.text,
-        isUser: false,
-        type: response.type,
-        data: response.data,
-        code: response.code,
-        suggestions: response.suggestions
-      };
+    try {
+      // Prepare conversation history for API (last 10 messages for context)
+      const conversationHistory = messages
+        .slice(-10) // Keep last 10 messages for context
+        .map(msg => ({
+          role: msg.isUser ? "user" : "assistant",
+          content: msg.text
+        }));
 
-      setMessages(prev => [...prev, botMessage]);
+      // Call Gemini API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: messageText,
+          conversationHistory: conversationHistory
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        const botMessage = {
+          text: data.response,
+          isUser: false,
+          suggestions: [
+            "Tell me more about her projects",
+            "What's her experience?",
+            "How can I contact her?",
+            "Show me her resume"
+          ]
+        };
+        setMessages(prev => [...prev, botMessage]);
+      } else {
+        throw new Error(data.error || 'Failed to get response');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage = {
+        text: "Sorry, I'm having trouble connecting right now. Please try again! If the issue persists, you can reach Zarana directly at zaranasolanki41014@gmail.com 📧",
+        isUser: false,
+        suggestions: [
+          "Try asking again",
+          "Switch to Portfolio mode",
+          "Download her resume"
+        ]
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 800);
+    }
   };
 
   // Handle suggestion click
@@ -279,7 +193,7 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
           <div>
             <h2 className="font-bold text-lg text-gray-900 dark:text-white">Chat with Zarana</h2>
             <p className="text-xs text-gray-600 dark:text-gray-400 hidden md:block">
-              AI Assistant • Always available
+              AI Assistant • Powered by Google Gemini
             </p>
           </div>
         </div>
@@ -428,7 +342,7 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
             />
             <button
               onClick={() => handleSendMessage(inputValue)}
-              disabled={!inputValue.trim()}
+              disabled={!inputValue.trim() || isTyping}
               className="bg-mocha text-white p-4 rounded-2xl hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
             >
               <AiOutlineSend className="text-xl" />
@@ -436,7 +350,7 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
           </div>
           
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-            Ask about projects, experience, skills, or how to get in touch
+            Ask about projects, experience, skills, or how to get in touch • Powered by Google Gemini 🤖
           </p>
         </div>
       </div>
