@@ -73,17 +73,19 @@ export const portfolioData = {
     },
     {
       id: 3,
-      name: "Diabetes Detector",
-      description: "An Android application utilizing OCR and machine learning to detect potential diabetes symptoms through image recognition.",
-      technologies: ["Java", "Android SDK", "OCR", "Machine Learning", "TensorFlow"],
-      github: "https://github.com/CodeByZarana/Diabetes-Detector",
+      name: "Finflow",
+      description: "A financial planning and analysis platform that helps businesses streamline financial processes with automated data collection, analysis, and visualization.",
+      technologies: ["Python", "FastAPI", "Data Analytics", "Financial Modeling", "Dashboard Visualization", "API Integration"],
+      github: "https://github.com/CodeByZarana",
+      liveUrl: "https://medium.com/@codebyzarana/finflow",
       highlights: [
-        "Uses OCR for medical report analysis",
-        "Machine learning models for symptom detection",
-        "Real-time image processing",
-        "Provides instant health insights"
+        "Automated financial data collection and analysis",
+        "Cash flow analysis and forecasting",
+        "Interactive financial dashboards",
+        "Strategic financial insights for decision-making",
+        "Integration with accounting software"
       ],
-      image: "/diabetes.png",
+      image: "/finflow.png",
       featured: true
     }
   ],
@@ -132,7 +134,7 @@ export const detectIntent = (message) => {
   // Specific project
   if (/ai.*business|business.*intelligence|bi.*platform|dashai/i.test(lowerMessage)) return 'project_ai_bi';
   if (/job.*match|matching.*agent/i.test(lowerMessage)) return 'project_job';
-  if (/diabetes/i.test(lowerMessage)) return 'project_diabetes';
+  if (/finflow|fin.*flow|financial.*planning/i.test(lowerMessage)) return 'project_finflow';
   
   // Experience
   if (/(experience|work.*history|job|role|position|intern|fgf|awakeen)/i.test(lowerMessage)) {
@@ -191,7 +193,7 @@ export const generateResponse = (intent, userMessage = '') => {
       suggestions: [
         "Tell me more about the AI BI Platform",
         "Show me the Job Matching Agent",
-        "What about the Diabetes Detector?"
+        "What about Finflow?"
       ]
     },
     
@@ -217,25 +219,14 @@ export const generateResponse = (intent, userMessage = '') => {
       ]
     },
     
-    project_diabetes: {
-      text: "The **Diabetes Detector** is a really innovative project! 🏥\n\nIt's an Android application that uses OCR and machine learning to detect potential diabetes symptoms through image recognition.\n\n**Technical Highlights:**\n• Built with Java and Android SDK\n• Integrates OCR for medical report analysis\n• Machine learning models with TensorFlow\n• Real-time image processing\n• Provides instant health insights\n\nThis showcases Zarana's ability to work with mobile development and ML technologies!",
+    project_finflow: {
+      text: "**Finflow** is a comprehensive financial planning and analysis platform! 💰\n\nIt's an intelligent financial management solution that helps businesses streamline their financial processes with automated data collection, analysis, and visualization.\n\n**Key Features:**\n• Automated financial data collection and analysis\n• Cash flow analysis and forecasting\n• Interactive financial dashboards\n• Strategic financial insights for decision-making\n• Integration with accounting software\n\n**Tech Stack:** Python, FastAPI, Data Analytics, Financial Modeling, Dashboard Visualization\n\nThis project demonstrates Zarana's expertise in building financial technology solutions and data analytics platforms!",
       type: 'project_card',
-      data: portfolioData.projects[1],
+      data: portfolioData.projects[2],
       suggestions: [
         "What other projects has she built?",
         "Tell me about her tech skills",
         "How can I contact her?"
-      ]
-    },
-    
-    project_job: {
-      text: "The **Job Matching Agent** is a practical NLP-powered tool! 🎯\n\nIt's an intelligent Python application that matches resumes with job descriptions using natural language processing and machine learning.\n\n**How it works:**\n• Uses TF-IDF vectorization for text analysis\n• Calculates skills compatibility scores\n• Matches categories and experience levels\n• Helps job seekers find best opportunities\n\n**Tech Stack:** Python, scikit-learn, NLTK, PyPDF2\n\nThis project demonstrates Zarana's data science and NLP capabilities!",
-      type: 'project_card',
-      data: portfolioData.projects[2],
-      suggestions: [
-        "Show me all her projects",
-        "What's her experience?",
-        "Can I see her resume?"
       ]
     },
     

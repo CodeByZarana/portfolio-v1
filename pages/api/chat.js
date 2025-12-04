@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { message, conversationHistory } = req.body;
+  const { message, conversationHistory, isContinuation } = req.body;
 
   // Validate input
   if (!message || message.trim() === '') {
@@ -68,7 +68,7 @@ SKILLS:
 - Tools: Git, Azure DevOps, Docker, Power Automate
 - Cloud: AWS, Firebase, Azure
 
-TOP PROJECTS:
+FEATURED PROJECTS:
 1. AI Business Intelligence Platform
    - Tech: Python, FastAPI, LangChain, AI/ML, Data Analytics, OpenAI, PostgreSQL
    - Description: An intelligent BI platform that transforms data into actionable insights using AI-powered analytics and NLP
@@ -76,30 +76,29 @@ TOP PROJECTS:
    - GitHub: github.com/CodeByZarana
    - Article: medium.com/@codebyzarana/building-an-ai-business-intelligence-platform-with-langchain-and-fastapi
 
-2. Tiffin Service Web Application
-   - Tech: ASP.NET Core MVC, C#, SQL Server, Entity Framework, Bootstrap
-   - Description: Full-stack subscription platform for delivering homemade food with real-time order tracking, user authentication, and admin dashboard
-   - Features: Enterprise-level architecture, robust authentication, scalable database design
-   - GitHub: github.com/CodeByZarana/Tiffin-Service-Web-Application
-
-3. Job Matching Agent
+2. Job Matching Agent
    - Tech: Python, scikit-learn, NLTK, PyPDF2, NLP
    - Description: Intelligent tool that matches resumes with job descriptions using NLP and machine learning
    - Features: TF-IDF vectorization, cosine similarity, skills compatibility scoring
-   - GitHub: github.com/CodeByZarana/Job-Matching-Agent
+   - GitHub: github.com/CodeByZarana/job-matching-agent
 
-4. Diabetes Detector
-   - Tech: Java, Android SDK, OCR, Machine Learning, TensorFlow
-   - Description: Android app using OCR and ML to detect potential diabetes symptoms through image recognition
-   - Features: OCR for medical report analysis, ML models for symptom detection, real-time image processing
-   - GitHub: github.com/CodeByZarana/Diabetes-Detector
+3. Finflow
+   - Tech: Python, FastAPI, Data Analytics, Financial Modeling, Dashboard Visualization, API Integration
+   - Description: A financial planning and analysis platform that helps businesses streamline financial processes with automated data collection, analysis, and visualization
+   - Features: Automated financial data collection, cash flow analysis and forecasting, interactive dashboards, strategic financial insights
+   - GitHub: github.com/CodeByZarana
+   - Article: medium.com/@codebyzarana/finflow
 
 OTHER PROJECTS:
 - Hostel Management System (PHP, MySQL)
-- Homely Delight & Meals To Go (React Native mobile apps)
-- YouTube Data Analysis (Python, Data Analytics)
+- Homely Delight (React Native, JavaScript, Expo, Firebase)
+- Meals To Go (React Native, JavaScript, Firebase)
+- YouTube Data Analysis (Python, YouTube Data API, Matplotlib)
 - Checkout Lane Optimization (Python, NumPy, Pandas, Scipy)
-- React projects (Tic Tac Toe, React Essentials, SkyScanner Challenge)
+- React Essentials (React)
+- SkyScanner Forage Challenge (React)
+- Tic Tac Toe (React, JavaScript)
+- Tiffin Service Web Application (ASP.NET Core MVC, C#, SQL Server, Entity Framework, Bootstrap)
 
 CERTIFICATES & LEARNING:
 - Google AI Essentials (Coursera, 2024) - Machine learning fundamentals and AI applications
@@ -155,26 +154,35 @@ RESPONSE GUIDELINES:
 
     const generateResponsePromise = async () => {
       // Initialize Gemini model
+      // Keep at 800 tokens to avoid Vercel timeout - each continuation will be a new message
       const model = genAI.getGenerativeModel({ 
         model: "gemini-2.5-pro",
         generationConfig: {
           temperature: 0.7,
-          maxOutputTokens: 800, // Reduced for faster response
+          maxOutputTokens: 800, // Keep at 800 to avoid timeout
           topP: 0.9,
         },
       });
 
       // Simplified conversation history (last 5 messages only for faster processing)
+      // For continuation, we need more context to include the previous assistant message
+      const historyLimit = isContinuation ? 6 : 5;
       let history = conversationHistory
-        .slice(-5) // Only keep last 5 messages
+        .slice(-historyLimit) // Keep more messages for continuation
         .filter(msg => msg.content !== "Hi there! 👋 I'm Zarana's AI assistant powered by Google Gemini. I can tell you all about her projects, experience, skills, and how to get in touch.\n\nWhat would you like to know?")
         .map(msg => ({
           role: msg.role === "assistant" ? "model" : "user",
           parts: [{ text: msg.content }]
         }));
 
-      // If history is empty or starts with 'model', reset it
-      if (history.length === 0 || history[0].role === "model") {
+      // For continuation, ensure we have the previous assistant message
+      if (isContinuation && history.length > 0 && history[history.length - 1].role !== "model") {
+        // If last message is not from assistant, we might need to adjust
+        // But this should be fine as the history should already include it
+      }
+      
+      // If history is empty or starts with 'model' (and not continuation), reset it
+      if (!isContinuation && (history.length === 0 || history[0].role === "model")) {
         history = [];
       }
 
@@ -183,22 +191,70 @@ RESPONSE GUIDELINES:
         history: history,
       });
 
-      // Send message with system prompt
-      const contextualMessage = `${systemPrompt}\n\nUser Question: ${message}`;
+      // For continuation requests, use a more explicit prompt with context
+      let contextualMessage;
+      if (isContinuation) {
+        // Get the last assistant message from history to provide context
+        const lastAssistantMessage = history
+          .filter(h => h.role === 'model')
+          .slice(-1)[0]?.parts?.[0]?.text || '';
+        
+        // Get the last 400 characters to provide context for continuation
+        const lastPart = lastAssistantMessage.slice(-400);
+        
+        // Also get the original user question from history
+        const userMessages = history.filter(h => h.role === 'user');
+        const originalQuestion = userMessages[userMessages.length - 1]?.parts?.[0]?.text || message;
+        
+        // Use a more direct continuation prompt that references the original question
+        contextualMessage = `You are continuing to answer this question: "${originalQuestion}"
+
+Your previous response ended with: "${lastPart}"
+
+IMPORTANT: Continue your response naturally from where you left off. Provide more details, complete your thought, or add additional information. Do NOT repeat what you already said. Generate new, meaningful content that continues the response.`;
+      } else {
+        contextualMessage = `${systemPrompt}\n\nUser Question: ${message}`;
+      }
+      
       const result = await chat.sendMessage(contextualMessage);
       const response = await result.response;
-      return response.text();
+      const responseText = response.text();
+      
+      // Check if response was truncated (Gemini may truncate if it hits token limit)
+      // We can check the finish reason or if response seems incomplete
+      const finishReason = result.response.candidates?.[0]?.finishReason;
+      const isMaxTokens = finishReason === 'MAX_TOKENS';
+      
+      // Also check if response ends abruptly (mid-sentence, no punctuation, or very short)
+      // A response ending without proper punctuation might be truncated
+      const endsAbruptly = responseText && responseText.length > 100 && !responseText.trim().match(/[.!?]\s*$/);
+      
+      // Consider it truncated if it hit max tokens OR ends abruptly
+      const isTruncated = isMaxTokens || endsAbruptly;
+      
+      return {
+        text: responseText,
+        isTruncated: isTruncated || endsAbruptly,
+        finishReason: finishReason
+      };
     };
 
     // Race between timeout and actual API call
-    const responseText = await Promise.race([
+    const responseData = await Promise.race([
       generateResponsePromise(),
       timeoutPromise
     ]);
 
+    // Handle both object and string responses for backward compatibility
+    const responseText = typeof responseData === 'string' ? responseData : responseData.text;
+    const isTruncated = typeof responseData === 'object' ? (responseData.isTruncated || false) : false;
+    const finishReason = typeof responseData === 'object' ? (responseData.finishReason || null) : null;
+    
     res.status(200).json({ 
       response: responseText,
-      success: true 
+      success: true,
+      isTruncated: isTruncated,
+      finishReason: finishReason
     });
   } catch (error) {
     console.error('Gemini API Error:', error);

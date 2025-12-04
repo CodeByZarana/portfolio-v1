@@ -33,7 +33,7 @@ const Message = ({ message, isUser }) => {
 
   return (
     <div className="flex justify-start mb-6">
-      <div className="bg-gray-100 dark:bg-gray-800 px-6 py-4 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm">
+      <div className={`bg-gray-100 dark:bg-gray-800 px-6 py-4 rounded-2xl rounded-tl-sm max-w-[85%] shadow-sm ${message.isContinuation ? 'mt-2' : ''}`}>
         <div className="prose prose-sm dark:prose-invert max-w-none">
           <div 
             className="text-sm md:text-base whitespace-pre-line leading-relaxed text-gray-900 dark:text-gray-100"
@@ -41,8 +41,8 @@ const Message = ({ message, isUser }) => {
           />
         </div>
         
-        {/* Suggested Questions */}
-        {message.suggestions && message.suggestions.length > 0 && (
+        {/* Suggested Questions - only show on last message */}
+        {message.suggestions && message.suggestions.length > 0 && !message.isContinuation && (
           <div className="mt-4 flex flex-wrap gap-2">
             {message.suggestions.map((suggestion, index) => (
               <SuggestionChip key={index} text={suggestion} />
@@ -92,6 +92,68 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
     scrollToBottom();
   }, [messages]);
 
+  // Handle continuing a truncated response - creates a new message
+  const continueResponse = async (previousText, conversationHistory) => {
+    setIsTyping(true);
+    
+    try {
+      // Call API with continuation request
+      // The conversation history already includes the previous response
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: "Continue your previous response from where you left off.",
+          conversationHistory: conversationHistory,
+          isContinuation: true
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success && data.response) {
+        const newText = data.response.trim();
+        
+        // Only create new message if we got meaningful new content (more than just a few characters)
+        if (newText.length > 10) {
+          // Create a new message for the continuation
+          const continuationMessage = {
+            text: newText,
+            isUser: false,
+            suggestions: [],
+            isTruncated: data.isTruncated || false,
+            isContinuation: true // Flag to indicate this is a continuation
+          };
+          
+          setMessages(prev => [...prev, continuationMessage]);
+          
+          // If still truncated, continue again with updated history
+          if (data.isTruncated) {
+            const updatedHistory = [
+              ...conversationHistory,
+              { role: "assistant", content: newText }
+            ];
+            setTimeout(async () => {
+              await continueResponse(newText, updatedHistory);
+            }, 800);
+          }
+        } else {
+          // If we got a very short or empty response, stop trying to continue
+          console.log('Continuation returned insufficient content, stopping');
+        }
+      } else {
+        // If no response or error, stop trying to continue
+        console.log('Continuation failed or returned no content');
+      }
+    } catch (error) {
+      console.error('Error continuing response:', error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
   // Handle sending message with Gemini API
   const handleSendMessage = async (messageText) => {
     if (!messageText.trim()) return;
@@ -137,9 +199,24 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
             "What's her experience?",
             "How can I contact her?",
             "Show me her resume"
-          ]
+          ],
+          isTruncated: data.isTruncated || false
         };
         setMessages(prev => [...prev, botMessage]);
+        
+        // If response was truncated, automatically continue
+        if (data.isTruncated) {
+          // Wait a brief moment for UX, then continue
+          // Build updated history with the user message and assistant's partial response
+          const updatedHistory = [
+            ...conversationHistory,
+            { role: "user", content: messageText },
+            { role: "assistant", content: botMessage.text }
+          ];
+          setTimeout(async () => {
+            await continueResponse(botMessage.text, updatedHistory);
+          }, 800);
+        }
       } else {
         throw new Error(data.error || 'Failed to get response');
       }

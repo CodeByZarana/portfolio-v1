@@ -20,18 +20,18 @@ const featuredProjects = [
     longDescription: "Uses TF-IDF vectorization and cosine similarity to calculate match scores. Helps job seekers find the best opportunities based on their skills and experience.",
     technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "NLP"],
     imageUrl: "/job-agent.png",
-    githubUrl: "https://github.com/CodeByZarana/Job-Matching-Agent",
+    githubUrl: "https://github.com/CodeByZarana/job-matching-agent",
     liveUrl: null,
     featured: true
   },
   {
-    title: "Diabetes Detector",
-    description: "An Android application utilizing OCR and machine learning to detect potential diabetes symptoms through image recognition.",
-    longDescription: "Combines computer vision with ML models to analyze medical reports. Features real-time image processing and provides instant health insights.",
-    technologies: ["Java", "Android SDK", "OCR", "Machine Learning", "TensorFlow"],
-    imageUrl: "/diabetes.png",
-    githubUrl: "https://github.com/CodeByZarana/Diabetes-Detector",
-    liveUrl: null,
+    title: "Finflow",
+    description: "A financial planning and analysis platform that helps businesses streamline financial processes with automated data collection, analysis, and visualization.",
+    longDescription: "An intelligent financial management solution that integrates with accounting software to automate financial data collection and analysis. Features include cash flow analysis, financial forecasting, interactive dashboards, and strategic financial insights to empower business decision-making.",
+    technologies: ["Python", "FastAPI", "Data Analytics", "Financial Modeling", "Dashboard Visualization", "API Integration"],
+    imageUrl: "/finflow.png",
+    githubUrl: "https://github.com/CodeByZarana",
+    liveUrl: "https://medium.com/@codebyzarana/finflow",
     featured: true
   }
 ];
@@ -92,6 +92,13 @@ const allProjects = [
     technologies: ["React", "JavaScript"],
     imageUrl: "/tictactoe.png",
     githubUrl: "https://github.com/CodeByZarana/Tic-Tac-Toe-React"
+  },
+  {
+    title: "Tiffin Service Web Application",
+    description: "Full-stack subscription platform for delivering homemade food with real-time order tracking, user authentication, and admin dashboard.",
+    technologies: ["ASP.NET Core MVC", "C#", "SQL Server", "Entity Framework", "Bootstrap"],
+    imageUrl: "/tiffin.png",
+    githubUrl: "https://github.com/CodeByZarana/Tiffin-Service-Web-Application"
   }
 ];
 
