@@ -99,6 +99,14 @@ const allProjects = [
     technologies: ["ASP.NET Core MVC", "C#", "SQL Server", "Entity Framework", "Bootstrap"],
     imageUrl: "/tiffin.png",
     githubUrl: "https://github.com/CodeByZarana/Tiffin-Service-Web-Application"
+  },
+  {
+    title: "MirrorMind",
+    description: "A gesture-controlled smart mirror with AI face recognition that provides an interactive and personalized user experience.",
+    technologies: ["Python", "Computer Vision", "AI/ML", "Face Recognition", "Gesture Control", "OpenCV"],
+    imageUrl: "/mirrormind.png",
+    githubUrl: "https://github.com/CodeByZarana/mirror-mind",
+    liveUrl: "https://medium.com/@codebyzarana/mirrormind-a-gesture-controlled-smart-mirror-with-ai-face-recognition-420ffe115f6b"
   }
 ];
 
@@ -315,7 +323,7 @@ export default function FeaturedProjects() {
             whileHover={isMobile ? {} : { scale: 1.05 }}
             whileTap={isMobile ? {} : { scale: 0.95 }}
           >
-            {showAll ? 'Show Less' : `View All ${allProjects.length + 3} Projects`}
+            {showAll ? 'Show Less' : `View All ${allProjects.length} Projects`}
           </motion.button>
         </motion.div>
 
@@ -371,16 +379,29 @@ export default function FeaturedProjects() {
                     )}
                   </div>
 
-                  {/* Link */}
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-sm font-semibold hover:text-mocha transition-colors"
-                  >
-                    <AiOutlineGithub className="text-lg" />
-                    View Code
-                  </a>
+                  {/* Links */}
+                  <div className="flex gap-4">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-sm font-semibold hover:text-mocha transition-colors"
+                    >
+                      <AiOutlineGithub className="text-lg" />
+                      View Code
+                    </a>
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm font-semibold hover:text-mocha transition-colors"
+                      >
+                        <AiOutlineLink className="text-lg" />
+                        Demo
+                      </a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
