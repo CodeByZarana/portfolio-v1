@@ -216,9 +216,17 @@ IMPORTANT: Continue your response naturally from where you left off. Provide mor
         contextualMessage = `${systemPrompt}\n\nUser Question: ${message}`;
       }
       
-      const result = await chat.sendMessage(contextualMessage);
-      const response = await result.response;
-      const responseText = response.text();
+      let result, response, responseText;
+      
+      try {
+        result = await chat.sendMessage(contextualMessage);
+        response = await result.response;
+        responseText = response.text();
+      } catch (apiError) {
+        // Re-throw with more context if it's an API error
+        console.error('Gemini sendMessage error:', apiError);
+        throw apiError;
+      }
       
       // Check if response was truncated (Gemini may truncate if it hits token limit)
       // We can check the finish reason or if response seems incomplete
@@ -257,9 +265,17 @@ IMPORTANT: Continue your response naturally from where you left off. Provide mor
       finishReason: finishReason
     });
   } catch (error) {
-    console.error('Gemini API Error:', error);
+    // Log full error details for debugging
+    console.error('Gemini API Error Details:', {
+      message: error.message,
+      status: error.status,
+      statusCode: error.statusCode,
+      code: error.code,
+      response: error.response,
+      stack: error.stack
+    });
     
-    // Handle different error types
+    // Handle different error types - check status codes first (most reliable)
     if (error.message === 'Request timeout') {
       return res.status(504).json({ 
         error: 'The request took too long to process. Please try a shorter question.',
@@ -267,30 +283,63 @@ IMPORTANT: Continue your response naturally from where you left off. Provide mor
       });
     }
     
-    if (error.message?.includes('API key') || error.status === 401) {
+    // Check HTTP status codes first (most reliable indicator)
+    const statusCode = error.status || error.statusCode || error.response?.status;
+    
+    if (statusCode === 401 || error.message?.toLowerCase().includes('api key') || error.message?.toLowerCase().includes('authentication')) {
       return res.status(401).json({ 
         error: 'API authentication failed. Please check your Google API key.',
         success: false 
       });
     }
     
-    if (error.message?.includes('quota') || error.status === 429) {
+    // Only treat as quota error if status is explicitly 429 or error message specifically mentions quota/quota exceeded
+    // Be more specific to avoid false positives
+    const isQuotaError = statusCode === 429 || 
+      (error.message?.toLowerCase().includes('quota exceeded') || 
+       error.message?.toLowerCase().includes('quota limit') ||
+       error.message?.toLowerCase().includes('resource exhausted') ||
+       error.code === 'RESOURCE_EXHAUSTED');
+    
+    if (isQuotaError) {
       return res.status(429).json({ 
         error: 'API quota exceeded. Please try again later.',
         success: false 
       });
     }
     
-    if (error.status === 503) {
+    if (statusCode === 503 || error.message?.toLowerCase().includes('service unavailable')) {
       return res.status(503).json({ 
         error: 'AI service temporarily unavailable. Please try again.',
         success: false 
       });
     }
     
-    // Generic error
+    // Check for rate limiting (different from quota)
+    // Rate limits are temporary - user should retry after a delay
+    if (statusCode === 429) {
+      // Check if error message indicates rate limit vs quota
+      const errorMsg = error.message?.toLowerCase() || '';
+      const isRateLimit = errorMsg.includes('rate limit') || 
+                         errorMsg.includes('too many requests') ||
+                         errorMsg.includes('resource_exhausted') && !errorMsg.includes('quota');
+      
+      if (isRateLimit) {
+        return res.status(429).json({ 
+          error: 'Rate limit exceeded. Please wait a moment and try again.',
+          success: false,
+          retryAfter: 5 // Suggest retrying after 5 seconds
+        });
+      }
+    }
+    
+    // Generic error - include more details in development
+    const errorMessage = process.env.NODE_ENV === 'development' 
+      ? `Failed to get response: ${error.message || 'Unknown error'}` 
+      : 'Failed to get response. Please try again.';
+    
     return res.status(500).json({ 
-      error: 'Failed to get response. Please try again.',
+      error: errorMessage,
       success: false 
     });
   }

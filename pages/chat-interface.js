@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { AiOutlineSend, AiOutlineGithub } from 'react-icons/ai';
 import { BsFillSunFill, BsFillMoonStarsFill, BsList, BsX } from 'react-icons/bs';
 import Image from 'next/image';
+import { detectIntent, generateResponse } from '../components/chat-bot';
 
 // Helper function to format markdown-style text
 const formatText = (text) => {
@@ -93,10 +94,18 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
   }, [messages]);
 
   // Handle continuing a truncated response - creates a new message
-  const continueResponse = async (previousText, conversationHistory) => {
+  // Added retryCount to track retries for exponential backoff
+  const continueResponse = async (previousText, conversationHistory, retryCount = 0) => {
     setIsTyping(true);
     
     try {
+      // Add delay before making request to avoid rate limiting
+      // Exponential backoff: 2s, 4s, 8s for retries
+      const baseDelay = retryCount === 0 ? 2000 : Math.min(2000 * Math.pow(2, retryCount), 10000);
+      if (retryCount > 0 || previousText) {
+        await new Promise(resolve => setTimeout(resolve, baseDelay));
+      }
+      
       // Call API with continuation request
       // The conversation history already includes the previous response
       const response = await fetch('/api/chat', {
@@ -112,6 +121,30 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
       });
 
       const data = await response.json();
+      
+      // Handle rate limit errors (429) with retry
+      if (response.status === 429 || (data.error && data.error.includes('rate limit'))) {
+        const retryAfter = response.headers.get('Retry-After');
+        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : baseDelay * 2;
+        
+        if (retryCount < 3) {
+          console.log(`Rate limited. Retrying after ${waitTime}ms (attempt ${retryCount + 1}/3)`);
+          setTimeout(async () => {
+            await continueResponse(previousText, conversationHistory, retryCount + 1);
+          }, waitTime);
+          return;
+        } else {
+          // Max retries reached
+          const errorMessage = {
+            text: "I'm experiencing high demand right now. Please wait a moment and try asking your question again.",
+            isUser: false,
+            suggestions: ["Try again in a moment", "Ask a shorter question"]
+          };
+          setMessages(prev => [...prev, errorMessage]);
+          setIsTyping(false);
+          return;
+        }
+      }
       
       if (data.success && data.response) {
         const newText = data.response.trim();
@@ -130,14 +163,15 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
           setMessages(prev => [...prev, continuationMessage]);
           
           // If still truncated, continue again with updated history
+          // Use longer delay (3 seconds) to avoid rate limiting
           if (data.isTruncated) {
             const updatedHistory = [
               ...conversationHistory,
               { role: "assistant", content: newText }
             ];
             setTimeout(async () => {
-              await continueResponse(newText, updatedHistory);
-            }, 800);
+              await continueResponse(newText, updatedHistory, 0);
+            }, 3000); // Increased to 3 seconds to avoid rate limits
           }
         } else {
           // If we got a very short or empty response, stop trying to continue
@@ -149,6 +183,17 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
       }
     } catch (error) {
       console.error('Error continuing response:', error);
+      // If it's a rate limit error, retry with backoff
+      if (error.message?.includes('429') || error.message?.includes('rate limit')) {
+        if (retryCount < 3) {
+          setTimeout(async () => {
+            await continueResponse(previousText, conversationHistory, retryCount + 1);
+          }, baseDelay * 2);
+          return;
+        }
+      }
+      // If continuation fails completely, don't show error - just stop
+      // The main response was already shown, so user has some content
     } finally {
       setIsTyping(false);
     }
@@ -188,7 +233,72 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
         }),
       });
 
-      const data = await response.json();
+      // Check if response is ok before parsing JSON
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        // If JSON parsing fails, use fallback
+        console.error('Failed to parse response, using fallback');
+        const intent = detectIntent(messageText);
+        const fallbackResponse = generateResponse(intent, messageText);
+        
+        const botMessage = {
+          text: fallbackResponse.text,
+          isUser: false,
+          suggestions: fallbackResponse.suggestions || [
+            "Tell me more about her projects",
+            "What's her experience?",
+            "How can I contact her?"
+          ],
+          isFallback: true
+        };
+        setMessages(prev => [...prev, botMessage]);
+        setIsTyping(false);
+        return;
+      }
+      
+      // Handle rate limit errors (429) - use fallback
+      if (response.status === 429 || (data.error && (data.error.includes('rate limit') || data.error.includes('quota')))) {
+        // Use fallback pattern matching instead of showing error
+        const intent = detectIntent(messageText);
+        const fallbackResponse = generateResponse(intent, messageText);
+        
+        const botMessage = {
+          text: fallbackResponse.text,
+          isUser: false,
+          suggestions: fallbackResponse.suggestions || [
+            "Tell me more about her projects",
+            "What's her experience?",
+            "How can I contact her?"
+          ],
+          isFallback: true // Flag to indicate fallback mode
+        };
+        setMessages(prev => [...prev, botMessage]);
+        setIsTyping(false);
+        return;
+      }
+      
+      // Handle any other API errors - use fallback
+      if (!response.ok || !data.success) {
+        console.log('API returned error, using fallback:', data.error);
+        const intent = detectIntent(messageText);
+        const fallbackResponse = generateResponse(intent, messageText);
+        
+        const botMessage = {
+          text: fallbackResponse.text,
+          isUser: false,
+          suggestions: fallbackResponse.suggestions || [
+            "Tell me more about her projects",
+            "What's her experience?",
+            "How can I contact her?"
+          ],
+          isFallback: true
+        };
+        setMessages(prev => [...prev, botMessage]);
+        setIsTyping(false);
+        return;
+      }
       
       if (data.success) {
         const botMessage = {
@@ -205,8 +315,9 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
         setMessages(prev => [...prev, botMessage]);
         
         // If response was truncated, automatically continue
+        // Use longer delay (2 seconds) to avoid rate limiting
         if (data.isTruncated) {
-          // Wait a brief moment for UX, then continue
+          // Wait a moment for UX, then continue
           // Build updated history with the user message and assistant's partial response
           const updatedHistory = [
             ...conversationHistory,
@@ -214,24 +325,45 @@ export default function ChatInterface({ onSwitchMode, darkMode, setDarkMode }) {
             { role: "assistant", content: botMessage.text }
           ];
           setTimeout(async () => {
-            await continueResponse(botMessage.text, updatedHistory);
-          }, 800);
+            await continueResponse(botMessage.text, updatedHistory, 0);
+          }, 2000); // Increased to 2 seconds to avoid rate limits
         }
       } else {
         throw new Error(data.error || 'Failed to get response');
       }
     } catch (error) {
-      console.error('Error:', error);
-      const errorMessage = {
-        text: "Sorry, I'm having trouble connecting right now. Please try again! If the issue persists, you can reach Zarana directly at zaranasolanki41014@gmail.com 📧",
-        isUser: false,
-        suggestions: [
-          "Try asking again",
-          "Switch to Portfolio mode",
-          "Download her resume"
-        ]
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      console.error('API Error, using fallback:', error);
+      
+      // Use fallback pattern matching when API fails
+      try {
+        const intent = detectIntent(messageText);
+        const fallbackResponse = generateResponse(intent, messageText);
+        
+        const botMessage = {
+          text: fallbackResponse.text,
+          isUser: false,
+          suggestions: fallbackResponse.suggestions || [
+            "Tell me more about her projects",
+            "What's her experience?",
+            "How can I contact her?"
+          ],
+          isFallback: true // Flag to indicate fallback mode
+        };
+        setMessages(prev => [...prev, botMessage]);
+      } catch (fallbackError) {
+        // If even fallback fails, show error message
+        console.error('Fallback also failed:', fallbackError);
+        const errorMessage = {
+          text: "Sorry, I'm having trouble right now. Please try again! If the issue persists, you can reach Zarana directly at zaranasolanki41014@gmail.com 📧",
+          isUser: false,
+          suggestions: [
+            "Try asking again",
+            "Switch to Portfolio mode",
+            "Download her resume"
+          ]
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
     } finally {
       setIsTyping(false);
     }

@@ -61,7 +61,7 @@ export const portfolioData = {
       name: "Job Matching Agent",
       description: "An intelligent Python tool that matches resumes with job descriptions using NLP and machine learning for skills compatibility analysis.",
       technologies: ["Python", "scikit-learn", "NLTK", "PyPDF2", "NLP"],
-      github: "https://github.com/CodeByZarana/Job-Matching-Agent",
+      github: "https://github.com/CodeByZarana/job-matching-agent",
       highlights: [
         "Uses TF-IDF vectorization and cosine similarity",
         "Calculates match scores for job compatibility",
@@ -132,9 +132,10 @@ export const detectIntent = (message) => {
   }
   
   // Specific project
-  if (/ai.*business|business.*intelligence|bi.*platform|dashai/i.test(lowerMessage)) return 'project_ai_bi';
-  if (/job.*match|matching.*agent/i.test(lowerMessage)) return 'project_job';
-  if (/finflow|fin.*flow|financial.*planning/i.test(lowerMessage)) return 'project_finflow';
+  if (/ai.*business|business.*intelligence|bi.*platform|dashai|langchain|fastapi.*bi/i.test(lowerMessage)) return 'project_ai_bi';
+  if (/job.*match|matching.*agent|resume.*match|nlp.*job/i.test(lowerMessage)) return 'project_job';
+  if (/finflow|fin.*flow|financial.*planning|financial.*analysis/i.test(lowerMessage)) return 'project_finflow';
+  if (/tiffin|food.*delivery|subscription.*food/i.test(lowerMessage)) return 'projects'; // Tiffin Service
   
   // Experience
   if (/(experience|work.*history|job|role|position|intern|fgf|awakeen)/i.test(lowerMessage)) {
@@ -159,6 +160,16 @@ export const detectIntent = (message) => {
   // Resume
   if (/(resume|cv|download)/i.test(lowerMessage)) {
     return 'resume';
+  }
+  
+  // Certifications
+  if (/(certificate|certification|cert|course|learning|training|udemy|coursera|linkedin.*learning)/i.test(lowerMessage)) {
+    return 'certifications';
+  }
+  
+  // Blogs / Writing
+  if (/(blog|article|writing|write|medium|pensieve|published)/i.test(lowerMessage)) {
+    return 'blogs';
   }
   
   // About
@@ -288,6 +299,24 @@ const techStack = {
       ]
     },
     
+    certifications: {
+      text: `Zarana has completed several certifications and courses to continuously improve her skills! 📚\n\n**Recent Certifications (2024):**\n• Google AI Essentials (Coursera) - Machine learning fundamentals and AI applications\n• Introduction to AI in Azure (Microsoft Learn) - AI services in Azure\n\n**Full-Stack & Development:**\n• Learning Full-Stack JavaScript: MERN Stack (LinkedIn Learning, 2023)\n• Learning SOLID Programming Principles (LinkedIn Learning, 2023)\n• Complete React Native (Udemy, 2021) - Mobile app development with Hooks\n\n**Programming & Design:**\n• Java Design Patterns: Behavioral Part 1 (LinkedIn Learning, 2023)\n• Java Tutorial for Beginners (Udemy, 2020)\n• Responsive Web Design (freeCodeCamp, 2020)\n\n**AI & Machine Learning:**\n• Neural Networks and Deep Learning (Coursera, 2020)\n\nZarana is committed to continuous learning and staying updated with the latest technologies! 🚀`,
+      suggestions: [
+        "Tell me about her projects",
+        "What's her experience?",
+        "Show me her blogs"
+      ]
+    },
+    
+    blogs: {
+      text: `Zarana writes technical articles and shares her knowledge on Medium! ✍️\n\n**Medium Profile:**\n📝 @codebyzarana - [medium.com/@codebyzarana](https://medium.com/@codebyzarana)\n\n**Featured Articles:**\n• "Building an AI Business Intelligence Platform with LangChain and FastAPI"\n• "Building a Secure User Impersonation Feature for Multi-Tenant Enterprise Applications"\n\n**Writing Topics:**\n• AI/ML and Machine Learning\n• Full-Stack Development\n• Software Architecture\n• Best Practices and Technical Insights\n\n**Portfolio Section:**\nHer portfolio has a section called "Pensieve" where she showcases technical thoughts and ideas.\n\nYou can check out all her writings on her Medium profile!`,
+      suggestions: [
+        "Tell me about her projects",
+        "What certifications does she have?",
+        "How can I contact her?"
+      ]
+    },
+    
     about: {
       text: `Let me tell you about Zarana! 👋\n\nZarana is a **Full Stack Software Developer** passionate about building scalable, high-performance web applications. Her journey into tech wasn't straightforward—it was filled with challenges that taught her the value of persistence and adaptability.\n\n**What drives her:**\n• Creating elegant solutions to complex problems\n• Learning new technologies and frameworks\n• Building applications that make a real impact\n• Writing clean, maintainable code\n\n**Current Focus:**\n• Working with .NET and React ecosystems\n• Building RESTful APIs and full-stack applications\n• CI/CD and DevOps practices\n• Business process automation\n\nShe's currently working as a .NET Software Developer Intern at FGF Brands, where she's developing scalable APIs and implementing automation solutions.\n\nWhat excites her most is the constant evolution in technology and the opportunity to turn ideas into reality through code!`,
       suggestions: [
@@ -298,20 +327,20 @@ const techStack = {
     },
     
     help: {
-      text: `I can help you learn about Zarana! Here's what you can ask me:\n\n**Projects & Work:**\n• "What projects has she built?"\n• "Tell me about the Tiffin Service app"\n• "Show me her work"\n\n**Experience & Skills:**\n• "What's her work experience?"\n• "What technologies does she know?"\n• "What's her tech stack?"\n\n**Background:**\n• "Tell me about her education"\n• "What's her background?"\n• "Who is Zarana?"\n\n**Contact & Resume:**\n• "How can I contact her?"\n• "Can I see her resume?"\n• "What's her email?"\n\nJust ask naturally, and I'll help you find what you're looking for!`,
+      text: `I can help you learn about Zarana! Here's what you can ask me:\n\n**Projects & Work:**\n• "What projects has she built?"\n• "Tell me about the AI BI Platform"\n• "Show me her work"\n\n**Experience & Skills:**\n• "What's her work experience?"\n• "What technologies does she know?"\n• "What's her tech stack?"\n\n**Background:**\n• "Tell me about her education"\n• "What certifications does she have?"\n• "What's her background?"\n\n**Writing & Learning:**\n• "What blogs has she written?"\n• "Where can I read her articles?"\n• "What courses has she taken?"\n\n**Contact & Resume:**\n• "How can I contact her?"\n• "Can I see her resume?"\n• "What's her email?"\n\nJust ask naturally, and I'll help you find what you're looking for!`,
       suggestions: [
         "Show me her projects",
         "What's her experience?",
-        "Tell me about her skills"
+        "Tell me about her certifications"
       ]
     },
     
     unknown: {
-      text: `I'm not quite sure how to answer that, but I'd love to help! 🤔\n\nYou can ask me about:\n• Zarana's projects and work\n• Her experience and skills\n• Education background\n• How to contact her\n• Download her resume\n\nTry asking something like "What projects has she built?" or "Tell me about her experience"!`,
+      text: `I'm not quite sure how to answer that, but I'd love to help! 🤔\n\nYou can ask me about:\n• Zarana's projects and work\n• Her experience and skills\n• Education and certifications\n• Blogs and articles she's written\n• How to contact her\n• Download her resume\n\nTry asking something like "What projects has she built?", "Tell me about her certifications", or "What blogs has she written?"!`,
       suggestions: [
         "What projects has she built?",
-        "Tell me about her experience",
-        "What skills does she have?"
+        "Tell me about her certifications",
+        "What blogs has she written?"
       ]
     }
   };
