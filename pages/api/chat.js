@@ -42,7 +42,7 @@ export default async function handler(req, res) {
 
 ZARANA'S INFO:
 - Full Stack Software Developer
-- Currently: .NET Developer Intern at FGF Brands (Jan 2025 - Present)
+- Currently: Software Developer at FGF Brands (Jan 2025 - Present)
   • Developing scalable RESTful APIs using ASP.NET MVC and C#, improving data retrieval efficiency by 30%
   • Implementing CI/CD pipelines with Azure DevOps, automating deployments and reducing production downtime
   • Working on business process automation using Power Automate, reducing manual tasks by 40%

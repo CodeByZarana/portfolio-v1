@@ -87,13 +87,6 @@ export default function HeroMinimal({ onNavigate }) {
       <TechGridBackground />
       <div className="container-minimal text-center relative z-10">
         
-        {/* Status Badge */}
-        <div className="mb-8 fade-in-up opacity-0">
-          <span className="status-badge">
-            Available for opportunities
-          </span>
-        </div>
-
         {/* Name - Huge and Bold */}
         <h1 className="hero-name mb-6 fade-in-up opacity-0 stagger-1">
           Hey, I'm Zarana Solanki!

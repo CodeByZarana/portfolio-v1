@@ -173,7 +173,7 @@ export default function AboutMinimal() {
                   Currently
                 </p>
                 <h3 className="text-xl md:text-2xl font-bold mb-2">
-                  .NET Software Developer Intern
+                  Software Developer
                 </h3>
                 <p className="text-base text-minimal-dark">
                   FGF Brands · Jan 2025 - Present

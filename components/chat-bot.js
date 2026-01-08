@@ -13,7 +13,7 @@ export const portfolioData = {
   
   experience: [
     {
-      role: ".NET Software Developer Intern",
+      role: "Software Developer",
       company: "FGF Brands",
       location: "Canada",
       period: "January 2025 - Present",
@@ -242,7 +242,7 @@ export const generateResponse = (intent, userMessage = '') => {
     },
     
     experience: {
-      text: `Zarana has great professional experience! Here's her work history:\n\n**Current Role:**\n🏢 **.NET Software Developer Intern** at FGF Brands\n📅 January 2025 - Present\n\n• Developing scalable RESTful APIs with ASP.NET MVC & C#\n• Implementing CI/CD pipelines with Azure DevOps\n• Business process automation (reduced manual tasks by 40%!)\n• Working with cross-functional teams on analytics solutions\n\n**Previous Role:**\n🏢 **Software Developer Intern** at Awakeen Studio\n📅 January 2022 - August 2022\n\n• Developed AR in Education app with C#, Unity, and Vuforia\n• Created 3D models and implemented AR features\n• Worked in Agile environment with Git\n\nZarana brings over 3 years of hands-on experience with modern frameworks and technologies!`,
+      text: `Zarana has great professional experience! Here's her work history:\n\n**Current Role:**\n🏢 **Software Developer** at FGF Brands\n📅 January 2025 - Present\n\n• Developing scalable RESTful APIs with ASP.NET MVC & C#\n• Implementing CI/CD pipelines with Azure DevOps\n• Business process automation (reduced manual tasks by 40%!)\n• Working with cross-functional teams on analytics solutions\n\n**Previous Role:**\n🏢 **Software Developer Intern** at Awakeen Studio\n📅 January 2022 - August 2022\n\n• Developed AR in Education app with C#, Unity, and Vuforia\n• Created 3D models and implemented AR features\n• Worked in Agile environment with Git\n\nZarana brings over 3 years of hands-on experience with modern frameworks and technologies!`,
       suggestions: [
         "What skills does she have?",
         "Show me her projects",
@@ -318,7 +318,7 @@ const techStack = {
     },
     
     about: {
-      text: `Let me tell you about Zarana! 👋\n\nZarana is a **Full Stack Software Developer** passionate about building scalable, high-performance web applications. Her journey into tech wasn't straightforward—it was filled with challenges that taught her the value of persistence and adaptability.\n\n**What drives her:**\n• Creating elegant solutions to complex problems\n• Learning new technologies and frameworks\n• Building applications that make a real impact\n• Writing clean, maintainable code\n\n**Current Focus:**\n• Working with .NET and React ecosystems\n• Building RESTful APIs and full-stack applications\n• CI/CD and DevOps practices\n• Business process automation\n\nShe's currently working as a .NET Software Developer Intern at FGF Brands, where she's developing scalable APIs and implementing automation solutions.\n\nWhat excites her most is the constant evolution in technology and the opportunity to turn ideas into reality through code!`,
+      text: `Let me tell you about Zarana! 👋\n\nZarana is a **Full Stack Software Developer** passionate about building scalable, high-performance web applications. Her journey into tech wasn't straightforward—it was filled with challenges that taught her the value of persistence and adaptability.\n\n**What drives her:**\n• Creating elegant solutions to complex problems\n• Learning new technologies and frameworks\n• Building applications that make a real impact\n• Writing clean, maintainable code\n\n**Current Focus:**\n• Working with .NET and React ecosystems\n• Building RESTful APIs and full-stack applications\n• CI/CD and DevOps practices\n• Business process automation\n\nShe's currently working as a Software Developer at FGF Brands, where she's developing scalable APIs and implementing automation solutions.\n\nWhat excites her most is the constant evolution in technology and the opportunity to turn ideas into reality through code!`,
       suggestions: [
         "Show me her projects",
         "What's her experience?",
