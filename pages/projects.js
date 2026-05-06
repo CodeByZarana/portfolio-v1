@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { AiOutlineGithub, AiOutlineLink } from 'react-icons/ai';
 
-const featuredProjects = [
+export const featuredProjects = [
   {
     title: "AI Business Intelligence Platform",
     description: "An intelligent BI platform built with LangChain and FastAPI that transforms data into actionable insights using AI-powered analytics and natural language processing.",
@@ -36,7 +36,31 @@ const featuredProjects = [
   }
 ];
 
-const allProjects = [
+export const allProjects = [
+  {
+    title: "MirrorMind",
+    description: "A gesture-controlled smart mirror with AI face recognition that provides an interactive and personalized user experience.",
+    technologies: ["Python", "Computer Vision", "AI/ML", "Face Recognition", "Gesture Control", "OpenCV"],
+    imageUrl: "/mirrormind.png",
+    githubUrl: "https://github.com/CodeByZarana/mirror-mind",
+    liveUrl: "https://medium.com/@codebyzarana/mirrormind-a-gesture-controlled-smart-mirror-with-ai-face-recognition-420ffe115f6b"
+  },
+  {
+    title: "Speakwell — English Confidence Coach",
+    description: "Fix small, high-impact English mistakes instantly. For fluent non-native speakers who want to sound more confident—paste or dictate a sentence, get one focused correction with category tags and history.",
+    technologies: ["Next.js", "React", "TypeScript", "Anthropic API", "Web Speech API", "CSS Modules"],
+    imageUrl: "/speakwell.png",
+    githubUrl: "https://github.com/CodeByZarana/english-coach",
+    liveUrl: "https://english-coach-hazel.vercel.app/"
+  },
+  {
+    title: "Planning Poker — Lightweight Sprint Estimation",
+    description: "Real-time planning poker for agile teams. Create a room, share the link, vote on stories together. Built for small teams that want to estimate sprints without signing up for yet another SaaS tool.",
+    technologies: ["React", "Vite", "JavaScript", "Express", "Socket.IO", "Node.js", "Tailwind CSS", "React Router", "Web Audio API", "Render"],
+    imageUrl: "/planning-poker.png",
+    githubUrl: "https://github.com/CodeByZarana/planning-poker",
+    liveUrl: "https://planning-poker-jhiy.onrender.com/"
+  },
   {
     title: "Hostel Management System",
     description: "A PHP-based web application for efficiently managing hostel operations.",
@@ -99,14 +123,6 @@ const allProjects = [
     technologies: ["ASP.NET Core MVC", "C#", "SQL Server", "Entity Framework", "Bootstrap"],
     imageUrl: "/tiffin.png",
     githubUrl: "https://github.com/CodeByZarana/Tiffin-Service-Web-Application"
-  },
-  {
-    title: "MirrorMind",
-    description: "A gesture-controlled smart mirror with AI face recognition that provides an interactive and personalized user experience.",
-    technologies: ["Python", "Computer Vision", "AI/ML", "Face Recognition", "Gesture Control", "OpenCV"],
-    imageUrl: "/mirrormind.png",
-    githubUrl: "https://github.com/CodeByZarana/mirror-mind",
-    liveUrl: "https://medium.com/@codebyzarana/mirrormind-a-gesture-controlled-smart-mirror-with-ai-face-recognition-420ffe115f6b"
   }
 ];
 

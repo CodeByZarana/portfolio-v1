@@ -1,5 +1,22 @@
 // ChatBot.js - Smart pattern matching and pre-scripted responses
 
+import { featuredProjects, allProjects } from '../pages/projects';
+
+function linkSuffixForProject(p) {
+  const parts = [];
+  if (p.liveUrl) parts.push(`[Demo](${p.liveUrl})`);
+  if (p.githubUrl) parts.push(`[Code](${p.githubUrl})`);
+  if (!parts.length) return '';
+  return ' ' + parts.join(' · ');
+}
+
+function buildProjectsFallbackText() {
+  const line = (p) => `• **${p.title}** — ${p.description}${linkSuffixForProject(p)}`;
+  const featuredBlock = featuredProjects.map(line).join('\n');
+  const moreBlock = allProjects.map(line).join('\n');
+  return `Zarana has built a broad portfolio across AI, full-stack web, mobile, and data.\n\n**Featured (portfolio highlights)**\n${featuredBlock}\n\n**More projects (includes live demos where listed)**\n${moreBlock}\n\nTip: switch to **Portfolio** mode and tap **View All Projects** for thumbnails and every link in one place.`;
+}
+
 export const portfolioData = {
   personal: {
     name: "Zarana Solanki",
@@ -135,6 +152,8 @@ export const detectIntent = (message) => {
   if (/ai.*business|business.*intelligence|bi.*platform|dashai|langchain|fastapi.*bi/i.test(lowerMessage)) return 'project_ai_bi';
   if (/job.*match|matching.*agent|resume.*match|nlp.*job/i.test(lowerMessage)) return 'project_job';
   if (/finflow|fin.*flow|financial.*planning|financial.*analysis/i.test(lowerMessage)) return 'project_finflow';
+  if (/speakwell|english confidence|english coach/i.test(lowerMessage)) return 'project_speakwell';
+  if (/planning poker|planning-poker|sprint estimation/i.test(lowerMessage)) return 'project_planning';
   if (/tiffin|food.*delivery|subscription.*food/i.test(lowerMessage)) return 'projects'; // Tiffin Service
   
   // Experience
@@ -198,13 +217,13 @@ export const generateResponse = (intent, userMessage = '') => {
     },
     
     projects: {
-      text: "Zarana has built several impressive projects! Here are her top 3 featured projects:",
+      text: buildProjectsFallbackText(),
       type: 'project_cards',
       data: portfolioData.projects.filter(p => p.featured).slice(0, 3),
       suggestions: [
         "Tell me more about the AI BI Platform",
-        "Show me the Job Matching Agent",
-        "What about Finflow?"
+        "Tell me about Speakwell",
+        "Tell me about Planning Poker"
       ]
     },
     
@@ -238,6 +257,24 @@ export const generateResponse = (intent, userMessage = '') => {
         "What other projects has she built?",
         "Tell me about her tech skills",
         "How can I contact her?"
+      ]
+    },
+
+    project_speakwell: {
+      text: "**Speakwell — English Confidence Coach** helps fluent non-native speakers fix small, high-impact English mistakes in one pass.\n\n**Highlights:**\n• Paste or dictate a sentence; get one focused correction with a short explanation\n• Category tags (grammar, phrasing, word choice, fillers); in-browser history; one-click copy\n• Next.js, TypeScript, Anthropic API, Web Speech API (no extra speech service), CSS Modules\n\n**Links:** [Live app](https://english-coach-hazel.vercel.app/) · [Code](https://github.com/CodeByZarana/english-coach)",
+      suggestions: [
+        "What other projects has she built?",
+        "Tell me about Planning Poker",
+        "How can I contact her?"
+      ]
+    },
+
+    project_planning: {
+      text: "**Planning Poker — Lightweight Sprint Estimation** is real-time planning poker for agile teams—create a room, share the link, and vote together without another SaaS signup.\n\n**Highlights:**\n• Fibonacci or T-shirt decks, hidden votes until a synchronized reveal with countdown\n• Node + Express + Socket.IO, in-memory rooms; React + Vite + Tailwind; Web Audio API for sounds\n• Deployed on Render\n\n**Links:** [Live app](https://planning-poker-jhiy.onrender.com/) · [Code](https://github.com/CodeByZarana/planning-poker)",
+      suggestions: [
+        "What other projects has she built?",
+        "Tell me about Speakwell",
+        "What's her tech stack?"
       ]
     },
     
